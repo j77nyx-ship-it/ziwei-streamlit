@@ -1,5 +1,5 @@
 import streamlit as st
-from iztro_py import astro
+from iztro import astro
 
 # ============知识库｜源自《紫微斗数精成》大德山人 ============
 knowledge_intro = """
@@ -79,10 +79,9 @@ with tab_ziwei:
             soul_palace = chart.get_soul_palace()
             body_palace = chart.get_body_palace()
             five_ju = chart.get_five_class()
-            # 获取当前流年运限对象
             transit = chart.get_transit_by_solar(f"{target_year}-01-01")
-            current_decadal = transit.decadal # 当前所处大限
-            dec_palace = current_decadal.palace #大限宫
+            current_decadal = transit.decadal
+            dec_palace = current_decadal.palace
 
         st.success("# 📜排盘结果报告")
         st.markdown(f"""
@@ -137,7 +136,7 @@ with tab_ziwei:
 - 流年{target_year}只是触发事件，**吉凶根基完全看本大限整体格局（本宫+三方四正+四化+煞星）。**
 
 > 📖斗数精成原文：
-> 若大限格局整体吉利：就算流年见煞，只是短暂波折，守静即可，不必恐慌，机遇依然存在；
+> 若大限格局整体吉利：就算流年遇煞，只是短期波折，守静即可，不必恐慌，机遇依然存在；
 > 若大限格局破败多煞：流年即使见禄、科，多属于镜花水月，看得见机会，很难拿到实质收益，切忌大额投资、重大冒险变动。
 """)
 
@@ -178,7 +177,7 @@ with tab_mayi:
             st.success(f"""
 ### 当前麻衣面相大限：{hit['name']}
 {hit['desc']}
-> 📝提示：实际看相需要肉眼观察面部对应区域的饱满、痣、疤痕、气色。
+> 📝提示：实际看相需要肉眼观察你面部对应区域的饱满、痣、疤痕、气色。
 """)
         else:
             st.info("不在识限歌三段核心区间，参看过渡岁数，结合相邻部位综合参考。")
@@ -186,6 +185,6 @@ with tab_mayi:
 st.divider()
 st.markdown("""
 💡两套体系区分
-- **紫微斗数：出生生辰排盘，iztro‑py库排盘，解读逻辑取自《紫微斗数精成》；自动算本命、大限、三方四正、四化、流年。**
+- **紫微斗数：出生生辰排盘，iztro库排盘，解读逻辑取自《紫微斗数精成》；自动算本命、大限、三方四正、四化、流年。**
 - **麻衣神相：真人面部照片，识限歌分三段面相大限，仅输出古籍理论。**
 """)
