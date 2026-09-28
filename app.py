@@ -1,7 +1,7 @@
 import streamlit as st
 import random
 import pytesseract
-from PIL import Image
+from PIL import Image, ImageEnhance, ImageFilter
 
 # ====================== 紫微斗数知识库（大运流年逻辑） ======================
 great_luck_list = [
@@ -55,11 +55,21 @@ combine_rule = """
 4. ❌ **大运凶 + 流年凶**：双重压力，凡事求稳，不折腾，重大决策延后，防守避险优先。
 """
 
-# OCR识别星盘图片文字函数
+# 图片预处理：灰度+增强对比度，专门优化文墨天机紫微盘
+def preprocess_img(img):
+    img = img.convert("L") #转灰度
+    enhancer = ImageEnhance.Contrast(img)
+    img = enhancer.enhance(2.0) #提高对比度
+    img = img.filter(ImageFilter.SMOOTH_MORE)
+    return img
+
+# OCR识别星盘图片文字函数，增加psm6适配表格文字
 def ocr_star_map(img):
     try:
-        # 识别简体中文+英文，专门读取星盘截图文字
-        result_text = pytesseract.image_to_string(img, lang="chi_sim+eng")
+        processed_img = preprocess_img(img)
+        # psm6：假设图片是一块规整表格文字，适合文墨天机宫格盘面
+        custom_config = r'--psm 6'
+        result_text = pytesseract.image_to_string(processed_img, lang="chi_sim+eng", config=custom_config)
         return result_text.strip()
     except Exception as err:
         return f"识别失败：{str(err)}"
@@ -68,7 +78,7 @@ def ocr_star_map(img):
 def parse_star_text(raw_text):
     keywords_dayun = ["大运", "大限", "命宫", "财帛", "官禄", "夫妻", "福德", "田宅", "迁移", "疾厄"]
     keywords_liunian = ["流年", "岁", "流月", "流日", "2024","2025","2026","2027","2028"]
-    star_keywords = ["紫微","天机","太阳","武曲","天同","廉贞","天府","太阴","贪狼","巨门","天相","天梁","七杀","破军","贪狼"]
+    star_keywords = ["紫微","天机","太阳","武曲","天同","廉贞","天府","太阴","贪狼","巨门","天相","天梁","七杀","破军"]
 
     found_dayun = [w for w in keywords_dayun if w in raw_text]
     found_liunian = [w for w in keywords_liunian if w in raw_text]
@@ -78,7 +88,7 @@ def parse_star_text(raw_text):
 
 # ========= Streamlit页面开始 =========
 st.set_page_config(page_title="紫微斗数｜星盘截图解析", layout="wide")
-st.title("🔮 紫微斗数 · 大运流年解析（支持星盘截图上传）")
+st.title("🔮 紫微斗数 · 大运流年解析（支持文墨天机星盘截图上传）")
 
 st.warning("""
 ⚠️ **民俗文化娱乐工具，仅供科普！不具备科学预测效力。人生取决于努力、环境、个人选择，请勿拿本结果做重大人生决策。**
@@ -133,8 +143,8 @@ with tab1:
 
 # Tab2 【核心：星盘截图上传 + OCR识别】
 with tab2:
-    st.subheader("🖼️ 上传你的紫微星盘截图")
-    st.info("✅ 支持排盘软件截图（图片png/jpg/jpeg）。上传星盘图片，程序自动OCR提取星盘文字，扫描里面的大运、流年、主星。\n> 图片文字越清晰，识别效果越好；背景杂乱、小字多容易识别乱码。")
+    st.subheader("🖼️ 上传文墨天机紫微星盘截图")
+    st.info("✅ 直接上传文墨天机排盘截图（png/jpg/jpeg），程序自动增强图片对比度，提取星盘文字，扫描大运、流年、主星。\n> 小提示：截图尽量只截取盘面主体，不要保留多余手机顶部状态栏，减少干扰文字。")
 
     # 上传图片控件
     uploaded_star_img = st.file_uploader("上传星盘截图", type=["png","jpg","jpeg"])
@@ -142,12 +152,13 @@ with tab2:
     if uploaded_star_img is not None:
         # 打开图片
         star_img = Image.open(uploaded_star_img)
-        st.image(star_img, caption="你上传的紫微星盘", use_column_width=True)
-        with st.spinner("正在识别星盘文字，请等待..."):
+        # ✅修复！替换废弃参数 use_column_width → width="stretch"
+        st.image(star_img, caption="你上传的紫微星盘", width="stretch")
+        with st.spinner("正在增强图片并识别星盘文字，请等待..."):
             ocr_result_text = ocr_star_map(star_img)
         st.text_area("✅ OCR识别出来的星盘原文", value=ocr_result_text, height=240)
 
-    st.markdown("### 星盘文本解析")
+    st.markdown("### 星盘文本关键词解析")
     star_text_input = st.text_area("粘贴识别出的星盘文字在这里，进行关键词解析", height=200, value=ocr_result_text)
 
     if st.button("🔍 解析星盘大运&流年"):
@@ -159,7 +170,7 @@ with tab2:
             if dayun_keys:
                 st.write(f"📌 检测到大运/宫位关键词：`{','.join(dayun_keys)}`")
             else:
-                st.write("📌 未检测到大运、宫位相关文字，建议换一张文字更清晰的星盘截图")
+                st.write("📌 未检测到大运、宫位相关文字，建议裁剪截图，只保留星盘主体")
 
             if liunian_keys:
                 st.write(f"📅 检测到流年关键词：`{','.join(liunian_keys)}`")
@@ -171,7 +182,7 @@ with tab2:
             else:
                 st.write("⭐ 未识别到主星名称")
 
-            st.info("💡 建议：记下识别出来的大运宫位，切换到【手动输入解析】标签，结合年龄看大运解读。\n> 本工具只是读取图片文字关键词，不能全自动完整解盘。")
+            st.info("💡 建议：记下识别出来的大运宫位，切换到【手动输入解析】标签，结合年龄看大运解读。\n> ⚠️本工具只是读取图片文字关键词，不能全自动完整解盘。")
 
 
 st.divider()
@@ -181,5 +192,5 @@ st.markdown("""
 2. 同样的流年，放在不同大运下，吉凶会完全反转。
 3. 命理讲究趋吉避凶，吉运把握机会，凶运减少折腾，不是坐等命运。
 4. 完整专业排盘，需要出生公/农历、时辰、性别、出生地。本程序只演示分析逻辑。
-5. ✨星盘截图上传：尽量截取星盘文字清晰区域，不要大量深色背景、水印遮挡文字。
+5. ✨文墨天机截图技巧：截图时裁掉手机顶部时间状态栏，只保留中间星盘格子，识别效果大幅提升。
 """)
