@@ -1,7 +1,9 @@
 import streamlit as st
 import random
+import pytesseract
+from PIL import Image
 
-# ---------------------- 基础数据 ----------------------
+# ====================== 紫微斗数知识库（大运流年逻辑） ======================
 great_luck_list = [
     {"start":5, "end":14, "name":"少年运（少年求学大运）",
      "desc":"这个阶段重点是家庭、读书学习。主要看长辈助力，适合沉淀学习，不要强求事业钱财。容易受家庭环境影响心态。"},
@@ -16,7 +18,7 @@ great_luck_list = [
     {"start":55, "end":64, "name":"后福修养大运",
      "desc":"宜静不宜动，享受人生成果，保养身心，不要折腾大投资，重视家人健康。"},
     {"start":65, "end":120, "name":"暮年享福大运",
-     "desc":"安养为主，看淡得失，保重身体，家庭亲情是核心。"}
+     "desc":"安养为主，看淡得失，保重身体，家庭亲情是核心。"},
 ]
 
 year_luck_list = [
@@ -26,7 +28,7 @@ year_luck_list = [
     {"tag":"人际是非", "desc":"容易与人产生矛盾，小人是非变多。少掺和别人是非，少吵架，遇事多忍让，减少社交纠纷。"},
     {"tag":"感情波动", "desc":"感情容易发生变化，恋爱分手、婚姻矛盾高发，多沟通，重大感情决定谨慎思考。"},
     {"tag":"注意健康", "desc":"身体需要重点保养，不要熬夜透支，定期体检，不要硬扛病痛。"},
-    {"tag":"变动奔波", "desc":"容易出现变动，换工作、搬家、出差奔波，环境发生变化，顺势而为，不要抗拒变化。"}
+    {"tag":"变动奔波", "desc":"容易出现变动，换工作、搬家、出差奔波，环境发生变化，顺势而为，不要抗拒变化。"},
 ]
 
 palace_text = """
@@ -53,58 +55,125 @@ combine_rule = """
 4. ❌ **大运凶 + 流年凶**：双重压力，凡事求稳，不折腾，重大决策延后，防守避险优先。
 """
 
-# ---------------------- Streamlit页面渲染 ----------------------
-st.set_page_config(page_title="紫微斗数｜大运流年解析", layout="wide")
-st.title("🔮 紫微斗数 · 大运流年通俗解析")
+# OCR识别星盘图片文字函数
+def ocr_star_map(img):
+    try:
+        # 识别简体中文+英文，专门读取星盘截图文字
+        result_text = pytesseract.image_to_string(img, lang="chi_sim+eng")
+        return result_text.strip()
+    except Exception as err:
+        return f"识别失败：{str(err)}"
+
+# 从OCR星盘文本里提取大运、流年关键词
+def parse_star_text(raw_text):
+    keywords_dayun = ["大运", "大限", "命宫", "财帛", "官禄", "夫妻", "福德", "田宅", "迁移", "疾厄"]
+    keywords_liunian = ["流年", "岁", "流月", "流日", "2024","2025","2026","2027","2028"]
+    star_keywords = ["紫微","天机","太阳","武曲","天同","廉贞","天府","太阴","贪狼","巨门","天相","天梁","七杀","破军","贪狼"]
+
+    found_dayun = [w for w in keywords_dayun if w in raw_text]
+    found_liunian = [w for w in keywords_liunian if w in raw_text]
+    found_stars = [w for w in star_keywords if w in raw_text]
+    return found_dayun, found_liunian, found_stars
+
+
+# ========= Streamlit页面开始 =========
+st.set_page_config(page_title="紫微斗数｜星盘截图解析", layout="wide")
+st.title("🔮 紫微斗数 · 大运流年解析（支持星盘截图上传）")
 
 st.warning("""
 ⚠️ **民俗文化娱乐工具，仅供科普！不具备科学预测效力。人生取决于努力、环境、个人选择，请勿拿本结果做重大人生决策。**
 """)
 
-st.markdown("""
+tab1, tab2 = st.tabs(["📝手动输入解析", "🖼️上传紫微星盘截图识别"])
+
+# Tab1 手动输入
+with tab1:
+    st.markdown("""
 ## 💡核心逻辑大白话
 - **大运（10年周期）：你的十年大环境底色。决定阶段上限。**
 - **流年（单一年份）：每一年临时发生的事情。**
 > 比喻：大运就像房子，流年是天气。房子好，下雨只是小事；房子漏雨，一点点小雨家里就遭殃。
 > **先看大运底色，再看流年，不能单独拿某一年下定论！**
 """)
-
-col1, col2 = st.columns(2)
-with col1:
-    st.subheader("📌 查询当前十年大运")
-    age = st.number_input("输入你的周岁年龄", min_value=1, max_value=120, value=28)
-    run_da_yun = st.button("解析大运")
-    if run_da_yun:
-        res = None
-        for item in great_luck_list:
-            if item["start"] <= age <= item["end"]:
-                res = item
-        st.success(f"""
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("📌 查询当前十年大运")
+        age = st.number_input("输入你的周岁年龄", min_value=1, max_value=120, value=28)
+        run_da_yun = st.button("解析大运")
+        if run_da_yun:
+            res = None
+            for item in great_luck_list:
+                if item["start"] <= age <= item["end"]:
+                    res = item
+            st.success(f"""
 **当前大运：{res['name']}（{res['start']}‑{res['end']}周岁）**
 
 {res['desc']}
 
 > 💡：这就是你这十年的整体底色，分析每一年流年，都要结合这个结果！
-        """)
+            """)
 
-with col2:
-    st.subheader("📅 查询流年状态")
-    in_year = st.number_input("输入查询公历年份", min_value=1900, max_value=2100, value=2026)
-    run_nian = st.button("解析流年")
-    if run_nian:
-        pick = random.choice(year_luck_list)
-        st.info(f"""
+    with col2:
+        st.subheader("📅 查询流年状态")
+        in_year = st.number_input("输入查询公历年份", min_value=1900, max_value=2100, value=2026)
+        run_nian = st.button("解析流年")
+        if run_nian:
+            pick = random.choice(year_luck_list)
+            st.info(f"""
 **{in_year}年模拟流年：【{pick['tag']}】**
 
 解读：{pick['desc']}
 
 > ⚠️提醒：流年吉凶不能孤立看，必须对照你的大运底色，参考下面组合规则综合判断。本结果仅演示逻辑，非专业排盘。
-        """)
+            """)
+    st.divider()
+    st.markdown(combine_rule)
+    st.divider()
+    st.markdown(palace_text)
 
-st.divider()
-st.markdown(combine_rule)
-st.divider()
-st.markdown(palace_text)
+# Tab2 【核心：星盘截图上传 + OCR识别】
+with tab2:
+    st.subheader("🖼️ 上传你的紫微星盘截图")
+    st.info("✅ 支持排盘软件截图（图片png/jpg/jpeg）。上传星盘图片，程序自动OCR提取星盘文字，扫描里面的大运、流年、主星。\n> 图片文字越清晰，识别效果越好；背景杂乱、小字多容易识别乱码。")
+
+    # 上传图片控件
+    uploaded_star_img = st.file_uploader("上传星盘截图", type=["png","jpg","jpeg"])
+    ocr_result_text = ""
+    if uploaded_star_img is not None:
+        # 打开图片
+        star_img = Image.open(uploaded_star_img)
+        st.image(star_img, caption="你上传的紫微星盘", use_column_width=True)
+        with st.spinner("正在识别星盘文字，请等待..."):
+            ocr_result_text = ocr_star_map(star_img)
+        st.text_area("✅ OCR识别出来的星盘原文", value=ocr_result_text, height=240)
+
+    st.markdown("### 星盘文本解析")
+    star_text_input = st.text_area("粘贴识别出的星盘文字在这里，进行关键词解析", height=200, value=ocr_result_text)
+
+    if st.button("🔍 解析星盘大运&流年"):
+        if len(star_text_input.strip()) < 5:
+            st.warning("请上传星盘图片或者粘贴识别后的星盘文字！")
+        else:
+            dayun_keys, liunian_keys, star_keys = parse_star_text(star_text_input)
+            st.success("✅ 星盘关键词扫描完成（娱乐参考）")
+            if dayun_keys:
+                st.write(f"📌 检测到大运/宫位关键词：`{','.join(dayun_keys)}`")
+            else:
+                st.write("📌 未检测到大运、宫位相关文字，建议换一张文字更清晰的星盘截图")
+
+            if liunian_keys:
+                st.write(f"📅 检测到流年关键词：`{','.join(liunian_keys)}`")
+            else:
+                st.write("📅 没有找到流年相关文字")
+
+            if star_keys:
+                st.write(f"⭐ 识别到星曜：`{','.join(star_keys)}`")
+            else:
+                st.write("⭐ 未识别到主星名称")
+
+            st.info("💡 建议：记下识别出来的大运宫位，切换到【手动输入解析】标签，结合年龄看大运解读。\n> 本工具只是读取图片文字关键词，不能全自动完整解盘。")
+
+
 st.divider()
 st.subheader("📖 使用小贴士")
 st.markdown("""
@@ -112,4 +181,5 @@ st.markdown("""
 2. 同样的流年，放在不同大运下，吉凶会完全反转。
 3. 命理讲究趋吉避凶，吉运把握机会，凶运减少折腾，不是坐等命运。
 4. 完整专业排盘，需要出生公/农历、时辰、性别、出生地。本程序只演示分析逻辑。
+5. ✨星盘截图上传：尽量截取星盘文字清晰区域，不要大量深色背景、水印遮挡文字。
 """)
