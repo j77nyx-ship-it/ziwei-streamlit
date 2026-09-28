@@ -1,3 +1,2 @@
 streamlit>=1.39
-iztro>=0.5.0
 pillow>=11.0.0
