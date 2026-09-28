@@ -9,15 +9,15 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-html_file = Path(__file__).parent / "index.html"
+html_path = Path(__file__).parent / "index.html"
 
-if not html_file.exists():
-    st.error("找不到 index.html，请确认它和 app.py 在同一个目录。")
+if not html_path.exists():
+    st.error("找不到 index.html，请确认 index.html 和 app.py 在同一个目录。")
 else:
-    html_code = html_file.read_text(encoding="utf-8")
+    html = html_path.read_text(encoding="utf-8")
 
     components.html(
-        html_code,
-        height=3000,
+        html,
+        height=5000,
         scrolling=True
     )
