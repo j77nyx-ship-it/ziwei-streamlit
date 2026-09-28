@@ -1,19 +1,16 @@
 import streamlit as st
-import random
-import pytesseract
-from PIL import Image, ImageEnhance, ImageFilter
 
-# ==============================================
-# 知识库 源自《紫微斗数精成》大德山人
-# ==============================================
+# ====================== 知识库 源自《紫微斗数精成》大德山人 ======================
 knowledge_intro = """
 > 📖 理论来源：《紫微斗数精成》大德山人
 **核心规则：本命盘为【体】（先天静盘，格局根基）；大限、流年为【用】（后天动运）**
-1. 大限(大运)：每一宫管10年；阳男阴女顺行，阴男阳女逆行；起运岁数由五行局决定，使用虚岁。
-2. 论大限：重点看大限本宫 + 三方四正；看主星庙旺失陷、四化禄权科忌、六吉六煞组合。
-3. 论流年：流年不能独立论吉凶！流年吉凶依附当前大限。大限吉，流年凶只是短暂波折；大限凶，流年吉多镜花水月。
-4. 三方四正：本宫+三合三宫叫三方；对宫叫四正；论命论限必须参看。
-5. 四化：化禄(财缘机遇)、化权(权力竞争)、化科(名声贵人)、化忌(阻滞是非损耗)。
+1. 大限(大运)：每一宫管10年；**阳男阴女顺行，阴男阳女逆行**；起运岁数由五行局决定，全部使用虚岁。
+2. 论大限：重点看大限本宫 + **三方四正**；看主星庙旺失陷、四化禄权科忌、六吉六煞组合。
+3. 论流年：流年**不能独立论吉凶！流年吉凶依附当前大限。**
+   - 大限吉，流年凶只是短暂波折；大限凶，流年吉多镜花水月，不宜大举投入。
+4. 三方四正：本宫+三合三宫叫三方；对宫叫四正；论限运不能只看本宫，必须参合。
+5. 空宫规则：本宫无主星，必须向对宫借星曜一起参断，吉凶打折扣。
+6. 四化：化禄(财缘机遇)、化权(权力竞争)、化科(名声贵人)、化忌(阻滞是非损耗)。
 """
 
 # 十四主星简易释义（取自斗数精成第八章）
@@ -58,124 +55,100 @@ palace_info = {
     "父母宫":"长辈、文书契约、出身。"
 }
 
-# 大限阶段参考（提示，真实要五行局+顺逆排盘）
-dayun_stage = [
-    {"age_start":2,"age_end":11,"note":"初限，少年根基，看家庭父母宫。"},
-    {"age_start":12,"age_end":21,"note":"少年青年，求学、启蒙，看命宫福德。"},
-    {"age_start":22,"age_end":31,"note":"青年阶段，恋爱择业，官禄夫妻为重。"},
-    {"age_start":32,"age_end":41,"note":"壮年大限，事业拼搏，财帛官禄。"},
-    {"age_start":42,"age_end":51,"note":"中年，守成为主，兼顾疾厄健康。"},
-    {"age_start":52,"age_end":61,"note":"中晚年，田宅福德优先。"},
-    {"age_start":62,"age_end":99,"note":"晚限，安养，重福德田宅。"},
-]
-
-# ===================== 图像处理OCR =====================
-def preprocess_img(img):
-    img = img.convert("L")
-    enhancer = ImageEnhance.Contrast(img)
-    img = enhancer.enhance(2.0)
-    img = img.filter(ImageFilter.SMOOTH_MORE)
-    return img
-
-def ocr_star_map(img):
-    try:
-        proc_img = preprocess_img(img)
-        custom_config = r'--psm 6'
-        result_text = pytesseract.image_to_string(proc_img, lang="chi_sim+eng", config=custom_config)
-        return result_text.strip()
-    except Exception as err:
-        return f"识别失败：{str(err)}"
-
-# 关键词扫描OCR文本
-def scan_ocr_text(txt):
-    hit_stars = [k for k in main_star_dict.keys() if k in txt]
-    hit_hua = [k for k in four_hua.keys() if k in txt]
-    hit_palace = [k for k in palace_info.keys() if k in txt]
-    has_dayun = "大限" in txt or "大限宫" in txt
-    has_liunian = "流年" in txt or "流月" in txt
-    return hit_stars, hit_hua, hit_palace, has_dayun, has_liunian
-
-# ===================== Streamlit页面 =====================
-st.set_page_config(page_title="紫微斗数｜《紫微斗数精成》解析演示", layout="wide")
+st.set_page_config(page_title="紫微斗数｜《紫微斗数精成》录入解析", layout="wide")
 st.title("🔮紫微斗数解析（参考《紫微斗数精成》大德山人）")
 
 st.warning("""
-⚠️ 【重要声明】本程序仅为传统国学科普演示，**不是专业排盘软件**。
-真正完整断盘需要：出生年月日时（农历/公历）、性别，推算五行局、顺逆行大限、布全部星曜。
-> 上传文墨天机截图仅做OCR文字提取关键词，不能代替人工看盘；仅供娱乐，勿作为人生重大决策依据。
+⚠️ 重要说明：
+1. 文墨天机APP复制文本**不包含动态大限、流年数据**；环形竖排截图开源OCR识别基本失效，本程序不再做图片识别。
+2. 操作方式：打开文墨天机，**手动看盘，抄录大限、流年信息填入表单**；图片仅做预览对照。
+3. 本程序为国学娱乐演示，不做人生重大决策依据。
 """)
 
-tab_ziwei, tab_mayi = st.tabs(["📅紫微斗数｜星盘&大限流年", "🧏麻衣神相（人脸面相）"])
+tab_ziwei, tab_mayi = st.tabs(["📅紫微斗数｜手动录入大限流年","🧏麻衣神相（人脸面相）"])
 
 with tab_ziwei:
     st.markdown(knowledge_intro)
     st.divider()
 
-    col_a, col_b = st.columns(2)
-    with col_a:
-        st.subheader("📌参考大限阶段（虚岁，演示用，真实需五行局顺逆排盘）")
-        age_input = st.number_input("输入你的虚岁", min_value=2, max_value=99, value=28)
-        btn_dayun = st.button("查看对应阶段参考解读")
-        if btn_dayun:
-            sel = None
-            for s in dayun_stage:
-                if s["age_start"] <= age_input <= s["age_end"]:
-                    sel = s
-            st.success(f"虚岁 {age_input}，属于 {sel['age_start']}‑{sel['age_end']}岁阶段\n👉阶段提示：{sel['note']}")
-            st.info("⚠️注意：真实大限要看【五行局+阳男阴女顺逆行】，本处仅阶段参考，不等同正式排盘结果。")
-
-    with col_b:
-        st.subheader("📅流年参考提示")
-        year_in = st.number_input("输入查询流年", min_value=1920, max_value=2100, value=2026)
-        st.markdown("""
-        > 根据斗数精成理论：**流年吉凶不能孤立看，必须依附当前大限的格局。**
-        > - 大限吉+流年凶：只是短暂波折，守静即可
-        > - 大限凶+流年吉：机会看着好，容易镜花水月，不宜大举投入
-        """)
+    st.subheader("🖼️上传文墨天机截图（仅预览，程序不会识别图片）")
+    up_img = st.file_uploader("上传星盘截图 png/jpg/jpeg", type=["png","jpg","jpeg"])
+    if up_img is not None:
+        from PIL import Image
+        img_obj = Image.open(up_img)
+        st.image(img_obj, caption="截图仅供你对照录入表单", width="stretch")
 
     st.divider()
-    st.subheader("🖼️上传文墨天机紫微星盘截图（OCR提取文字）")
-    st.info("上传文墨天机截图，程序OCR提取图片文字，扫描识别主星、四化、宫位关键词。\n建议：截图裁剪掉手机状态栏，只保留盘面，提高识别率。")
-    up_img = st.file_uploader("上传星盘截图 png/jpg/jpeg", type=["png","jpg","jpeg"])
-    ocr_out = ""
-    if up_img is not None:
-        img_obj = Image.open(up_img)
-        st.image(img_obj, caption="上传星盘", width="stretch")
-        with st.spinner("正在OCR识别图片文字..."):
-            ocr_out = ocr_star_map(img_obj)
-        st.text_area("OCR识别得到的盘面文字", value=ocr_out, height=240)
+    st.subheader("📝【第一步】本命基础信息录入（参考文墨天机）")
+    col_base1,col_base2 = st.columns(2)
+    with col_base1:
+        gender_z = st.radio("性别",["男","女"])
+        yang_yin_type = st.radio("出生年属性（决定大限顺逆行）",["阳年(阳男阴女顺行)","阴年(阴男阳女逆行)"])
+        wu_xing_ju = st.selectbox("五行局（决定大限起运虚岁）",["水二局","木三局","金四局","土五局","火六局"])
+    with col_base2:
+        birth_note = st.text_input("生辰备注（仅给自己看，不参与运算）",placeholder="例：公历1990‑05‑20 辰时")
 
-    user_text = st.text_area("粘贴星盘文本，执行关键词扫描", height=200, value=ocr_out)
-    if st.button("🔍扫描星盘关键词（取自斗数精成知识库）"):
-        if len(user_text.strip()) < 3:
-            st.warning("请粘贴星盘识别后的文字")
+    st.divider()
+    st.subheader("📝【第二步】录入当前【大限】信息（文墨天机底部切换到大限看）")
+    col_d1,col_d2 = st.columns(2)
+    with col_d1:
+        d_start_age = st.number_input("大限开始虚岁",min_value=2,max_value=110,value=23)
+        d_end_age = st.number_input("大限结束虚岁",min_value=3,max_value=120,value=32)
+        d_palace = st.selectbox("大限所落宫",list(palace_info.keys()))
+    with col_d2:
+        d_stars = st.multiselect("大限宫内主星",list(main_star_dict.keys()))
+        d_huas = st.multiselect("大限宫内四化",list(four_hua.keys()))
+
+    st.divider()
+    st.subheader("📝【第三步】录入流年信息（可选，依附大限判断）")
+    col_l1,col_l2 = st.columns(2)
+    with col_l1:
+        in_year = st.number_input("要查看的流年公历年份",min_value=1900,max_value=2100,value=2026)
+        liu_nian_palace = st.selectbox("流年命宫",list(palace_info.keys()))
+    with col_l2:
+        liu_huas = st.multiselect("流年四化",list(four_hua.keys()))
+
+    st.divider()
+    btn_run = st.button("🔍生成解析报告（依据紫微斗数精成）",type="primary")
+    if btn_run:
+        st.success("# 📜解析报告")
+        st.markdown(f"""
+> 基础信息：{gender_z}｜{yang_yin_type}｜{wu_xing_ju}
+> 当前大限：虚岁 {d_start_age}‑{d_end_age}，大限落【{d_palace}】
+> 流年参考：{in_year}年，流年命宫【{liu_nian_palace}】
+""")
+        st.info(f"**大限本宫本义：** {palace_info[d_palace]}")
+
+        st.markdown("### ✨大限宫内主星解读")
+        if len(d_stars)>0:
+            for s in d_stars:
+                st.write(f"- **{s}**：{main_star_dict[s]}")
         else:
-            stars, huas, palaces, has_dy, has_ln = scan_ocr_text(user_text)
-            st.success("关键词扫描结果")
-            if stars:
-                st.markdown("**识别到主星：**")
-                for s in stars:
-                    st.write(f"- {s}：{main_star_dict[s]}")
-            else:
-                st.write("未识别到十四主星，截图文字清晰度不足。")
+            st.write("> ⚠️大限本宫无主星，【空宫】，必须借**对宫星曜**参合吉凶，格局力量打折扣。")
 
-            if huas:
-                st.markdown("**识别到四化：**")
-                for h in huas:
-                    st.write(f"- {four_hua[h]}")
-            else:
-                st.write("未识别四化关键词")
+        st.markdown("### ✨大限宫内四化")
+        if len(d_huas)>0:
+            for h in d_huas:
+                st.write(f"- {four_hua[h]}")
+        else:
+            st.write("大限宫内无四化。")
 
-            if palaces:
-                st.markdown(f"识别到宫位：{','.join(palaces)}")
-            else:
-                st.write("未识别十二宫关键词")
+        st.divider()
+        st.markdown("## 📖《紫微斗数精成》核心断语")
+        st.markdown("""
+1. 📌**大限为体，流年为用。** 不要单看流年好坏，根基看大限格局。
+2. 看大限不能只看本宫，**必须参看三方四正（三合+对宫）综合评判格局高低。**
+3. 流年只是触发事件：
+    - 如果本大限整体格局吉：就算流年遇煞，只是短期波折，守静即可，不必恐慌；
+    - 如果本大限格局差：流年看到禄、科也容易镜花水月，机会看得见拿不到，切忌大额投入、冒险变动。
+4. 空宫借对宫：本宫没有主星，全盘分析必须把对宫主星、四化拿过来一起看。
+""")
+        if len(liu_huas)>0:
+            st.markdown("### ✨流年四化提示")
+            for lh in liu_huas:
+                st.write(f"- {four_hua[lh]}")
 
-            st.markdown(f"""
-            {'✅检测文本包含【大限】' if has_dy else '❌文本没有大限相关文字'}
-            {'✅检测文本包含【流年】' if has_ln else '❌文本没有流年相关文字'}
-            """)
-            st.info("💡操作建议：找到截图里面【大限走到XX宫】，结合《紫微斗数精成》理论：看该宫主星、四化，加上三方四正综合分析，流年依附大限论吉凶。")
+        st.info("💡实操建议：回到文墨天机，点开【三方四正】，把三合宫、对宫的星星再记录，分析会更完整。")
 
     st.divider()
     with st.expander("📖知识库：斗数精成重点摘录"):
@@ -189,6 +162,9 @@ with tab_ziwei:
 
 **大限论断原则（斗数精成原文）**
 > 大限管十年祸福；大限为体，流年为用。大限格局差，流年再好，也难真正获取大利。
+
+**无主星（空宫）规则**
+> 本宫没有主星，要向对宫借全部星曜来论断，吉凶打折扣。
 """)
 
 # ========== 麻衣神相Tab ==========
@@ -197,10 +173,11 @@ with tab_mayi:
     st.info("""
     ⚠️ 注意：麻衣神相是**看人脸照片**！！不要上传紫微星盘截图。
     依据：识限歌三段大限，十三部位流年歌，三停十二宫。
-    本程序无法AI视觉识别人脸疤痕、纹路，仅输出古籍理论框架。
+    程序无法AI视觉识别人脸疤痕、纹路，仅输出古籍理论框架。
     """)
     up_face = st.file_uploader("上传人脸正面照片", type=["png","jpg","jpeg"])
     if up_face is not None:
+        from PIL import Image
         faceimg = Image.open(up_face)
         st.image(faceimg, caption="上传人脸照片", width="stretch")
     mayi_age = st.number_input("输入周岁", min_value=1, max_value=100, value=28)
@@ -227,6 +204,11 @@ with tab_mayi:
 st.divider()
 st.markdown("""
 > 💡两套体系区分：
-> - 紫微斗数：出生时间排盘，看星盘（文墨天机），《紫微斗数精成》；大限=十宫轮走，虚岁起运，阳男阴女顺逆。
+> - 紫微斗数：出生时间排盘（文墨天机），《紫微斗数精成》；大限=十宫轮走，虚岁起运，阳男阴女顺逆。
 > - 麻衣神相：看真人脸部照片，识限歌分三段面相大限。
+
+📌使用流程：
+1. 文墨天机排盘；底部切换到大限，记下：大限虚岁区间、落哪一宫、宫内星星、四化；
+2. 切换流年，记下流年命宫、流年四化；
+3. 全部填入网页表单，点击生成解析报告。
 """)
