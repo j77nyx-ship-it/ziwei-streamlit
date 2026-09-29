@@ -4,828 +4,836 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>紫微斗数排盘研究工具</title>
+<title>紫微斗数研究工具</title>
 
 <style>
-:root{
-    --bg:#f5f6f8;
-    --card:#ffffff;
-    --text:#202124;
-    --sub:#6b7280;
-    --line:#e5e7eb;
-    --primary:#7c3aed;
-    --primary2:#5b21b6;
-    --gold:#b7791f;
-    --red:#b91c1c;
-    --green:#047857;
-    --blue:#1d4ed8;
-    --shadow:0 8px 30px rgba(0,0,0,.06);
+* {
+    box-sizing: border-box;
 }
 
-*{
-    box-sizing:border-box;
+:root {
+    --bg: #f4f1eb;
+    --card: #fffdf8;
+    --card2: #f8f4ec;
+    --line: #d8cdbb;
+    --line-dark: #b9aa94;
+    --text: #292621;
+    --muted: #7b746a;
+    --red: #9d332c;
+    --red-soft: #f3e3df;
+    --gold: #9b7835;
+    --gold-soft: #f4ecd8;
+    --blue: #496a88;
+    --blue-soft: #e5edf4;
+    --green: #55745b;
+    --green-soft: #e7efe7;
+    --purple: #765b7d;
+    --purple-soft: #eee7f0;
+    --shadow: 0 5px 18px rgba(61, 49, 33, 0.07);
 }
 
-body{
-    margin:0;
-    padding:0;
-    background:var(--bg);
-    color:var(--text);
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
     font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "PingFang SC",
+        "Noto Serif SC",
+        "Songti SC",
+        "STSong",
         "Microsoft YaHei",
-        sans-serif;
+        serif;
+}
+
+body {
+    min-height: 100vh;
 }
 
 button,
 input,
-select{
-    font:inherit;
+select {
+    font-family: inherit;
 }
 
-button{
-    cursor:pointer;
+button {
+    cursor: pointer;
 }
 
-.container{
-    width:min(1450px, calc(100% - 28px));
-    margin:20px auto 50px;
+.app {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 24px 22px 70px;
 }
 
-.header{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:18px;
-    padding:24px 26px;
-    box-shadow:var(--shadow);
-    margin-bottom:16px;
+.header {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.95),
+            rgba(248,242,230,.96)
+        );
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    padding: 24px 26px;
+    margin-bottom: 18px;
 }
 
-.header-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:15px;
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
 }
 
-.title{
-    margin:0;
-    font-size:28px;
-    font-weight:800;
-    letter-spacing:.5px;
+.logo-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
 }
 
-.subtitle{
-    color:var(--sub);
-    margin-top:8px;
-    line-height:1.7;
+.logo {
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    color: var(--gold);
+    background: #fffaf0;
 }
 
-.theme-btn{
-    border:1px solid var(--line);
-    background:#fff;
-    border-radius:10px;
-    padding:9px 14px;
+h1 {
+    margin: 0;
+    font-size: 27px;
+    letter-spacing: 3px;
+    font-weight: 700;
 }
 
-.disclaimer{
-    margin-top:18px;
-    background:#fff8e7;
-    border:1px solid #f4d58d;
-    color:#73510c;
-    padding:13px 15px;
-    border-radius:10px;
-    line-height:1.7;
-    font-size:13px;
+.subtitle {
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: 1px;
 }
 
-.card{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:18px;
-    box-shadow:var(--shadow);
-    padding:20px;
-    margin-bottom:16px;
+.status-box {
+    min-width: 250px;
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,.7);
+    font-size: 12px;
+    line-height: 1.7;
 }
 
-.card-title{
-    font-size:19px;
-    font-weight:800;
-    margin-bottom:16px;
+.status-ok {
+    color: var(--green);
 }
 
-.grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:14px;
+.status-error {
+    color: var(--red);
 }
 
-.field{
-    display:flex;
-    flex-direction:column;
-    gap:7px;
+.section {
+    background: var(--card);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    margin-bottom: 18px;
+    padding: 20px;
 }
 
-.field label{
-    font-size:13px;
-    color:var(--sub);
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.section-title::before {
+    content: "";
+    width: 4px;
+    height: 20px;
+    background: var(--red);
+    display: inline-block;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.field {
+    min-width: 0;
+}
+
+.field label {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 6px;
 }
 
 .field input,
-.field select{
-    width:100%;
-    height:42px;
-    border:1px solid var(--line);
-    border-radius:9px;
-    padding:0 11px;
-    background:#fff;
-    color:var(--text);
-    outline:none;
+.field select {
+    width: 100%;
+    height: 40px;
+    border: 1px solid var(--line-dark);
+    background: #fffefa;
+    color: var(--text);
+    padding: 0 10px;
+    outline: none;
+    border-radius: 2px;
 }
 
 .field input:focus,
-.field select:focus{
-    border-color:var(--primary);
-    box-shadow:0 0 0 3px rgba(124,58,237,.1);
+.field select:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px rgba(155,120,53,.1);
 }
 
-.full{
-    grid-column:1/-1;
+.full {
+    grid-column: 1 / -1;
 }
 
-.radio-group{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
+.coordinate-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 10px;
+    align-items: end;
 }
 
-.radio-item{
-    border:1px solid var(--line);
-    background:#fff;
-    border-radius:9px;
-    padding:10px 15px;
-    cursor:pointer;
-    transition:.15s;
+.btn {
+    border: 1px solid var(--line-dark);
+    background: #fffaf0;
+    color: var(--text);
+    min-height: 40px;
+    padding: 0 15px;
+    border-radius: 2px;
 }
 
-.radio-item.active{
-    border-color:var(--primary);
-    background:#f3e8ff;
-    color:var(--primary2);
-    font-weight:700;
+.btn:hover {
+    background: #f5eddd;
 }
 
-.switch-row{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-top:12px;
+.btn-primary {
+    border-color: var(--red);
+    background: var(--red);
+    color: white;
 }
 
-.switch{
-    position:relative;
-    width:46px;
-    height:25px;
+.btn-primary:hover {
+    background: #812922;
 }
 
-.switch input{
-    display:none;
+.btn-gold {
+    border-color: var(--gold);
+    background: var(--gold);
+    color: white;
 }
 
-.slider{
-    position:absolute;
-    inset:0;
-    background:#d1d5db;
-    border-radius:99px;
-    cursor:pointer;
-    transition:.2s;
+.btn-danger {
+    color: var(--red);
+    border-color: #cda7a1;
 }
 
-.slider:before{
-    content:"";
-    position:absolute;
-    width:19px;
-    height:19px;
-    left:3px;
-    top:3px;
-    background:white;
-    border-radius:50%;
-    transition:.2s;
-    box-shadow:0 1px 3px rgba(0,0,0,.2);
+.checkbox-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    margin-top: 10px;
 }
 
-.switch input:checked + .slider{
-    background:var(--primary);
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
 }
 
-.switch input:checked + .slider:before{
-    transform:translateX(21px);
+.checkbox input {
+    width: 16px;
+    height: 16px;
 }
 
-.location-row{
-    display:grid;
-    grid-template-columns:2fr 1fr 1fr;
-    gap:10px;
+.hint {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-top: 8px;
 }
 
-.geo-row{
-    display:flex;
-    gap:9px;
-    align-items:end;
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
 }
 
-.geo-button{
-    height:42px;
-    border:0;
-    border-radius:9px;
-    padding:0 16px;
-    background:#111827;
-    color:#fff;
-    white-space:nowrap;
+.notice {
+    padding: 13px 15px;
+    border: 1px solid #d9c8a3;
+    background: #faf3df;
+    color: #665536;
+    font-size: 12px;
+    line-height: 1.8;
+    margin-bottom: 16px;
 }
 
-.geo-button:hover{
-    opacity:.9;
+.error {
+    padding: 13px 15px;
+    border: 1px solid #d5aaa4;
+    background: #faece9;
+    color: #8b3129;
+    line-height: 1.7;
+    margin-bottom: 16px;
 }
 
-.geo-status{
-    margin-top:8px;
-    color:var(--sub);
-    font-size:12px;
-    line-height:1.6;
+.success {
+    padding: 13px 15px;
+    border: 1px solid #afc8b2;
+    background: #edf5ee;
+    color: #48644c;
+    line-height: 1.7;
+    margin-bottom: 16px;
 }
 
-.actions{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    margin-top:18px;
+/* =========================
+   命盘
+========================= */
+
+.chart-wrapper {
+    overflow-x: auto;
+    padding: 6px;
+}
+
+.chart-board {
+    min-width: 850px;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 190px);
+    gap: 0;
+    border: 2px solid #8d7d67;
+    background: #e9dfcf;
+}
+
+.palace {
+    position: relative;
+    background: #fffdf9;
+    border: 1px solid #bcae99;
+    padding: 9px;
+    overflow: hidden;
+    transition: none;
+}
+
+.palace:hover {
+    background: #fffdf9;
+}
+
+.palace.tri-highlight {
+    box-shadow: inset 0 0 0 3px rgba(157,51,44,.20);
+    background: #fff9f5;
+}
+
+.palace.active {
+    box-shadow: inset 0 0 0 3px rgba(155,120,53,.45);
 }
 
-.btn{
-    border:1px solid var(--line);
-    background:#fff;
-    color:var(--text);
-    padding:10px 17px;
-    border-radius:9px;
+.palace-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 5px;
+    border-bottom: 1px solid #ddd2c1;
+    padding-bottom: 5px;
 }
 
-.btn.primary{
-    background:var(--primary);
-    border-color:var(--primary);
-    color:#fff;
-    font-weight:700;
+.palace-name {
+    font-size: 15px;
+    font-weight: 700;
 }
 
-.btn.primary:hover{
-    background:var(--primary2);
+.palace-branch {
+    font-size: 12px;
+    color: var(--muted);
 }
 
-.btn.danger{
-    color:#b91c1c;
+.palace-stem {
+    font-size: 10px;
+    color: #8d806d;
 }
 
-.btn:disabled{
-    opacity:.5;
-    cursor:not-allowed;
+.palace-flags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    margin: 5px 0;
 }
 
-.info-grid{
-    display:grid;
-    grid-template-columns:repeat(6,1fr);
-    gap:10px;
+.tag {
+    font-size: 9px;
+    border: 1px solid #cbbca6;
+    padding: 1px 4px;
+    background: #faf6ee;
+    color: #776b5d;
 }
 
-.info-item{
-    border:1px solid var(--line);
-    background:#fafafa;
-    border-radius:10px;
-    padding:12px;
+.tag.body {
+    color: var(--red);
+    border-color: #cda49f;
+    background: #f8ecea;
 }
 
-.info-label{
-    color:var(--sub);
-    font-size:12px;
-    margin-bottom:5px;
+.tag.original {
+    color: var(--purple);
+    border-color: #c9b8cd;
+    background: #f3edf5;
 }
 
-.info-value{
-    font-size:15px;
-    font-weight:700;
+.star-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 6px;
+    align-items: baseline;
+    line-height: 1.4;
 }
 
-.toolbar{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    align-items:center;
+.major-star {
+    font-size: 18px;
+    font-weight: 700;
+    color: #382f27;
+    white-space: nowrap;
 }
 
-.toolbar select,
-.toolbar input{
-    height:40px;
-    border:1px solid var(--line);
-    border-radius:8px;
-    padding:0 10px;
-    background:#fff;
+.minor-star {
+    font-size: 11px;
+    color: #5f554b;
+    white-space: nowrap;
 }
 
-.chart-wrapper{
-    overflow:auto;
-    padding:10px 0;
+.adjective-star {
+    font-size: 10px;
+    color: #81766a;
+    white-space: nowrap;
 }
 
-.chart{
-    min-width:850px;
-    max-width:1050px;
-    margin:0 auto;
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    grid-template-rows:repeat(4,190px);
-    gap:5px;
+.star-good {
+    color: #8c3b32;
 }
 
-.palace{
-    position:relative;
-    border:1px solid #c9c9c9;
-    background:#fff;
-    border-radius:8px;
-    padding:9px;
-    overflow:hidden;
-    cursor:pointer;
-    transition:.15s;
+.star-bad {
+    color: #516a78;
 }
 
-.palace:hover{
-    box-shadow:0 4px 15px rgba(0,0,0,.08);
+.mutagen {
+    display: inline-block;
+    font-size: 9px;
+    margin-left: 2px;
+    padding: 0 3px;
+    border-radius: 2px;
+    color: white;
+    background: #777;
 }
 
-.palace.selected{
-    outline:3px solid rgba(124,58,237,.3);
-    border-color:var(--primary);
+.mutagen-lu {
+    background: #4d7656;
 }
 
-.palace.ming{
-    background:#fff9e8;
+.mutagen-quan {
+    background: #8b5b36;
 }
 
-.palace.shen{
-    background:#eef7ff;
+.mutagen-ke {
+    background: #5a6e8a;
 }
 
-.palace-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:4px;
-    margin-bottom:5px;
+.mutagen-ji {
+    background: #9b4038;
 }
 
-.palace-name{
-    font-weight:800;
-    font-size:15px;
+.brightness {
+    font-size: 9px;
+    color: #9a8d7a;
+    margin-left: 2px;
 }
 
-.branch{
-    font-size:12px;
-    color:var(--sub);
+.palace-bottom {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    bottom: 7px;
+    color: #928777;
+    font-size: 9px;
+    display: flex;
+    justify-content: space-between;
+    gap: 4px;
 }
 
-.stem{
-    font-size:11px;
-    color:#777;
+.center {
+    grid-column: 2 / 4;
+    grid-row: 2 / 4;
+    background:
+        radial-gradient(
+            circle at center,
+            #fffaf0 0,
+            #f7efdf 65%,
+            #efe4d1 100%
+        );
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    border: 1px solid #a99577;
+    overflow: hidden;
 }
 
-.stars{
-    display:flex;
-    flex-wrap:wrap;
-    gap:4px;
-    margin-top:7px;
+.center-inner {
+    width: 100%;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-.star{
-    display:inline-flex;
-    align-items:center;
-    border-radius:5px;
-    padding:3px 5px;
-    font-size:11px;
-    background:#f3f4f6;
-    cursor:pointer;
+.center-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #554331;
+    margin-bottom: 8px;
 }
 
-.star.major{
-    background:#fef3c7;
-    color:#854d0e;
-    font-weight:800;
+.center-subtitle {
+    text-align: center;
+    font-size: 11px;
+    color: #8a7964;
+    margin-bottom: 14px;
 }
 
-.star.soft{
-    background:#ecfdf5;
-    color:#065f46;
+.center-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
 }
 
-.star.tough{
-    background:#fee2e2;
-    color:#991b1b;
+.info-item {
+    border-bottom: 1px solid #d8cbb8;
+    padding: 5px 4px;
 }
 
-.star.adjective{
-    background:#eff6ff;
-    color:#1e40af;
+.info-label {
+    font-size: 9px;
+    color: #9b8c79;
 }
 
-.mutagen{
-    color:#b91c1c;
-    font-weight:800;
-    margin-left:2px;
+.info-value {
+    margin-top: 2px;
+    font-size: 12px;
+    color: #493d30;
+    font-weight: 600;
 }
 
-.brightness{
-    color:#7c3aed;
-    margin-left:2px;
+.center-four {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    margin-top: 10px;
 }
 
-.palace-bottom{
-    position:absolute;
-    bottom:7px;
-    left:9px;
-    right:9px;
-    display:flex;
-    justify-content:space-between;
-    font-size:10px;
-    color:#888;
+.center-four div {
+    border: 1px solid #d4c5ae;
+    background: rgba(255,255,255,.5);
+    text-align: center;
+    padding: 5px 2px;
 }
 
-.center-box{
-    grid-column:2/4;
-    grid-row:2/4;
-    border:1px dashed #d1d5db;
-    border-radius:12px;
-    background:#fafafa;
-    padding:18px;
-    overflow:auto;
+.center-four small {
+    display: block;
+    font-size: 9px;
+    color: #998a74;
 }
 
-.center-title{
-    font-size:20px;
-    font-weight:800;
-    margin-bottom:10px;
+.center-four strong {
+    font-size: 12px;
 }
 
-.center-text{
-    color:#666;
-    line-height:1.8;
-    font-size:13px;
+.chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px 15px;
+    padding: 12px 0 2px;
+    font-size: 11px;
+    color: var(--muted);
 }
 
-.analysis-list{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:12px;
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
-.analysis-item{
-    border:1px solid var(--line);
-    border-radius:12px;
-    padding:15px;
-    background:#fff;
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border: 1px solid #bcae99;
+    background: #fff9f5;
 }
 
-.analysis-item h4{
-    margin:0 0 8px;
-    font-size:16px;
+/* =========================
+   运限
+========================= */
+
+.control-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.control-label {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.cycle-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.cycle-btn {
+    border: 1px solid var(--line);
+    background: #fffaf0;
+    padding: 7px 11px;
+    font-size: 12px;
 }
 
-.analysis-item p{
-    margin:0;
-    line-height:1.8;
-    color:#555;
-    font-size:13px;
+.cycle-btn.active {
+    color: white;
+    background: var(--red);
+    border-color: var(--red);
 }
 
-.tag{
-    display:inline-block;
-    padding:3px 7px;
-    border-radius:6px;
-    font-size:11px;
-    background:#f3f4f6;
-    margin:2px;
+.cycle-info {
+    border: 1px solid var(--line);
+    background: var(--card2);
+    padding: 12px 14px;
+    font-size: 12px;
+    line-height: 1.8;
 }
 
-.tag.red{
-    background:#fee2e2;
-    color:#991b1b;
+/* =========================
+   大白话解析
+========================= */
+
+.analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
 }
 
-.tag.green{
-    background:#dcfce7;
-    color:#166534;
+.analysis-card {
+    border: 1px solid var(--line);
+    background: #fffdf9;
+    padding: 17px;
 }
 
-.tag.gold{
-    background:#fef3c7;
-    color:#92400e;
+.analysis-card.full-width {
+    grid-column: 1 / -1;
 }
 
-.tag.blue{
-    background:#dbeafe;
-    color:#1e40af;
+.analysis-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 9px;
 }
 
-.table-wrap{
-    overflow:auto;
+.analysis-title h3 {
+    margin: 0;
+    font-size: 16px;
 }
 
-table{
-    width:100%;
-    border-collapse:collapse;
-    min-width:600px;
+.analysis-badge {
+    font-size: 10px;
+    border: 1px solid #d1c3ad;
+    padding: 3px 6px;
+    color: #7c6c59;
+    background: #faf6ed;
 }
 
-th,
-td{
-    border-bottom:1px solid var(--line);
-    padding:10px 9px;
-    text-align:left;
-    font-size:13px;
+.analysis-text {
+    font-size: 13px;
+    line-height: 2;
+    color: #4c453d;
 }
 
-th{
-    background:#fafafa;
+.evidence {
+    margin-top: 10px;
+    border-top: 1px dashed #d5c8b6;
+    padding-top: 9px;
 }
 
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.45);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:1000;
-    padding:20px;
+.evidence-title {
+    font-size: 10px;
+    color: #9b8b76;
+    margin-bottom: 5px;
 }
 
-.modal.show{
-    display:flex;
+.evidence-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
 }
 
-.modal-content{
-    width:min(620px,100%);
-    max-height:80vh;
-    overflow:auto;
-    background:#fff;
-    border-radius:16px;
-    padding:22px;
-    box-shadow:0 20px 60px rgba(0,0,0,.2);
+.evidence-item {
+    font-size: 10px;
+    padding: 3px 6px;
+    background: #f4eee4;
+    border: 1px solid #ded1bd;
+    color: #756a5d;
 }
 
-.modal-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:15px;
+.analysis-note {
+    padding: 11px 13px;
+    background: #f8f3e9;
+    border-left: 3px solid var(--gold);
+    font-size: 12px;
+    line-height: 1.8;
+    color: #6d604e;
 }
+
+/* =========================
+   表格
+========================= */
 
-.modal-close{
-    border:0;
-    background:#f3f4f6;
-    border-radius:8px;
-    width:34px;
-    height:34px;
+.data-table-wrap {
+    overflow-x: auto;
 }
 
-.loading{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(255,255,255,.75);
-    z-index:2000;
-    align-items:center;
-    justify-content:center;
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    min-width: 800px;
 }
 
-.loading.show{
-    display:flex;
+.data-table th,
+.data-table td {
+    border: 1px solid var(--line);
+    padding: 8px;
+    text-align: left;
+    vertical-align: top;
 }
 
-.loading-box{
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:14px;
-    padding:22px 30px;
-    box-shadow:var(--shadow);
-    text-align:center;
+.data-table th {
+    background: #f5eee3;
+    color: #6e604d;
+    font-weight: 700;
 }
 
-.spinner{
-    width:30px;
-    height:30px;
-    border:3px solid #ddd;
-    border-top-color:var(--primary);
-    border-radius:50%;
-    animation:spin .8s linear infinite;
-    margin:0 auto 12px;
+.data-table td {
+    background: #fffdf9;
 }
+
+/* =========================
+   响应式
+========================= */
+
+@media (max-width: 1000px) {
+    .form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .analysis-grid {
+        grid-template-columns: 1fr;
+    }
 
-@keyframes spin{
-    to{
-        transform:rotate(360deg);
+    .analysis-card.full-width {
+        grid-column: auto;
     }
 }
 
-.error{
-    background:#fff1f2;
-    color:#9f1239;
-    border:1px solid #fecdd3;
-    padding:12px;
-    border-radius:9px;
-    margin-top:12px;
-    line-height:1.6;
-}
-
-.success{
-    background:#ecfdf5;
-    color:#065f46;
-    border:1px solid #a7f3d0;
-    padding:12px;
-    border-radius:9px;
-    margin-top:12px;
-    line-height:1.6;
-}
-
-.saved-list{
-    display:grid;
-    gap:8px;
-}
-
-.saved-item{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-    align-items:center;
-    border:1px solid var(--line);
-    border-radius:9px;
-    padding:10px 12px;
-}
-
-.saved-info{
-    min-width:0;
-}
-
-.saved-name{
-    font-weight:700;
-}
-
-.saved-date{
-    color:var(--sub);
-    font-size:12px;
-    margin-top:3px;
-}
-
-.saved-actions{
-    display:flex;
-    gap:6px;
-}
-
-.small-btn{
-    border:1px solid var(--line);
-    background:#fff;
-    border-radius:7px;
-    padding:6px 9px;
-    font-size:12px;
-}
-
-.footer{
-    text-align:center;
-    color:#999;
-    font-size:12px;
-    line-height:1.7;
-    margin-top:25px;
-}
-
-body.dark{
-    --bg:#111318;
-    --card:#191b21;
-    --text:#e5e7eb;
-    --sub:#9ca3af;
-    --line:#30343d;
-    --shadow:0 8px 30px rgba(0,0,0,.25);
-}
-
-body.dark .field input,
-body.dark .field select,
-body.dark .radio-item,
-body.dark .btn,
-body.dark .geo-button,
-body.dark .toolbar select,
-body.dark .toolbar input{
-    background:#20232a;
-    color:#e5e7eb;
-    border-color:#383d47;
-}
-
-body.dark .theme-btn{
-    background:#20232a;
-    color:#e5e7eb;
-    border-color:#383d47;
-}
-
-body.dark .info-item,
-body.dark .center-box,
-body.dark .palace,
-body.dark .analysis-item,
-body.dark th{
-    background:#20232a;
-}
-
-body.dark .disclaimer{
-    background:#2b2412;
-    border-color:#6b551c;
-    color:#e7c875;
-}
-
-body.dark .modal-content{
-    background:#191b21;
-}
-
-@media(max-width:1100px){
-    .grid{
-        grid-template-columns:repeat(2,1fr);
+@media (max-width: 680px) {
+    .app {
+        padding: 10px 8px 40px;
     }
 
-    .info-grid{
-        grid-template-columns:repeat(3,1fr);
+    .header {
+        padding: 17px;
+    }
+
+    .header-top {
+        flex-direction: column;
+    }
+
+    .status-box {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .coordinate-row {
+        grid-template-columns: 1fr;
+    }
+
+    .section {
+        padding: 14px;
+    }
+
+    .chart-board {
+        min-width: 720px;
+        grid-template-rows: repeat(4, 160px);
+    }
+
+    .center-inner {
+        padding: 12px;
+    }
+
+    .center-title {
+        font-size: 18px;
+    }
+
+    .major-star {
+        font-size: 15px;
     }
 }
 
-@media(max-width:700px){
-    .container{
-        width:calc(100% - 16px);
-        margin-top:8px;
+@media print {
+    body {
+        background: white;
     }
 
-    .header{
-        padding:17px;
-        border-radius:13px;
-    }
-
-    .title{
-        font-size:22px;
-    }
-
-    .header-top{
-        align-items:flex-start;
-    }
-
-    .grid{
-        grid-template-columns:1fr;
-    }
-
-    .location-row{
-        grid-template-columns:1fr;
-    }
-
-    .info-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .analysis-list{
-        grid-template-columns:1fr;
-    }
-
-    .card{
-        padding:15px;
-        border-radius:13px;
-    }
-}
-
-@media print{
-    body{
-        background:#fff;
-    }
-
-    .no-print,
     .header,
-    .form-card,
-    .toolbar-card,
-    .footer{
-        display:none!important;
+    .input-section,
+    .actions,
+    .no-print {
+        display: none !important;
     }
 
-    .card{
-        box-shadow:none;
-        border:1px solid #ccc;
+    .section {
+        border: none;
+        box-shadow: none;
+        padding: 0;
     }
 
-    .chart-wrapper{
-        overflow:visible;
-    }
-
-    .chart{
-        min-width:0;
+    .chart-board {
+        width: 100%;
+        max-width: none;
     }
 }
 </style>
@@ -833,62 +841,91 @@ body.dark .modal-content{
 
 <body>
 
-<div class="loading" id="loading">
-    <div class="loading-box">
-        <div class="spinner"></div>
-        <div id="loadingText">正在处理……</div>
-    </div>
-</div>
+<div class="app">
 
-<div class="container">
-
-    <div class="header">
+    <header class="header">
         <div class="header-top">
+
             <div>
-                <h1 class="title">紫微斗数排盘研究工具</h1>
-                <div class="subtitle">
-                    自助排盘 · 十二宫 · 星曜 · 四化 · 大限 · 流年 · 基础传统文化解析
+                <div class="logo-title">
+                    <div class="logo">☯</div>
+
+                    <div>
+                        <h1>紫微斗数研究工具</h1>
+
+                        <div class="subtitle">
+                            自助排盘 · 三方四正 · 四化 · 大限 · 流年 · 传统文化研究
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <button class="theme-btn no-print" onclick="toggleTheme()">
-                ☾ / ☀
-            </button>
+            <div class="status-box">
+                <div id="libraryStatus">
+                    正在加载排盘计算核心……
+                </div>
+
+                <div id="geoStatus">
+                    经纬度：等待输入出生地
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+
+    <!-- =========================
+         输入
+    ========================== -->
+
+    <section class="section input-section">
+
+        <div class="section-title">
+            出生资料
         </div>
 
-        <div class="disclaimer">
-            本网站仅为传统文化紫微斗数研究、娱乐参考，不构成人生、婚姻、投资、医疗决策依据；
-            命理属于民俗文化，不具备科学预测效力，请理性看待。
+        <div class="notice">
+            本工具用于传统文化紫微斗数研究与娱乐参考。
+            初次打开不会预填任何个人出生资料，也不会自动生成命盘。
         </div>
-    </div>
 
+        <div id="formError" class="error" style="display:none;"></div>
 
-    <!-- 排盘输入 -->
-    <div class="card form-card">
-        <div class="card-title">① 出生资料</div>
-
-        <div class="grid">
+        <div class="form-grid">
 
             <div class="field">
                 <label>历法</label>
 
-                <div class="radio-group">
-                    <div
-                        class="radio-item active"
-                        id="solarRadio"
-                        onclick="setCalendar('solar')"
-                    >
-                        公历
-                    </div>
+                <select id="calendarType">
+                    <option value="solar">公历</option>
+                    <option value="lunar">农历</option>
+                </select>
+            </div>
 
-                    <div
-                        class="radio-item"
-                        id="lunarRadio"
-                        onclick="setCalendar('lunar')"
-                    >
-                        农历
-                    </div>
-                </div>
+
+            <div class="field">
+                <label>出生年份</label>
+
+                <input
+                    id="birthYear"
+                    type="number"
+                    placeholder="例如：1995"
+                    min="1"
+                    max="2100"
+                >
+            </div>
+
+
+            <div class="field">
+                <label>出生月份</label>
+
+                <input
+                    id="birthMonth"
+                    type="number"
+                    placeholder="1 - 12"
+                    min="1"
+                    max="12"
+                >
             </div>
 
 
@@ -896,26 +933,65 @@ body.dark .modal-content{
                 <label>出生日期</label>
 
                 <input
-                    id="birthDate"
-                    type="date"
-                >
-
-                <input
-                    id="lunarDate"
-                    type="text"
-                    placeholder="例如：2002-06-18"
-                    style="display:none"
+                    id="birthDay"
+                    type="number"
+                    placeholder="1 - 31"
+                    min="1"
+                    max="31"
                 >
             </div>
 
 
             <div class="field">
-                <label>出生时间</label>
+                <label>出生小时</label>
 
-                <input
-                    id="birthTime"
-                    type="time"
-                >
+                <select id="birthHour">
+                    <option value="">请选择</option>
+                    <option value="0">00</option>
+                    <option value="1">01</option>
+                    <option value="2">02</option>
+                    <option value="3">03</option>
+                    <option value="4">04</option>
+                    <option value="5">05</option>
+                    <option value="6">06</option>
+                    <option value="7">07</option>
+                    <option value="8">08</option>
+                    <option value="9">09</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                </select>
+            </div>
+
+
+            <div class="field">
+                <label>出生分钟</label>
+
+                <select id="birthMinute">
+                    <option value="0">00</option>
+                    <option value="5">05</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                    <option value="25">25</option>
+                    <option value="30">30</option>
+                    <option value="35">35</option>
+                    <option value="40">40</option>
+                    <option value="45">45</option>
+                    <option value="50">50</option>
+                    <option value="55">55</option>
+                </select>
             </div>
 
 
@@ -924,60 +1000,9 @@ body.dark .modal-content{
 
                 <select id="gender">
                     <option value="">请选择</option>
-                    <option value="male">男</option>
-                    <option value="female">女</option>
+                    <option value="男">男</option>
+                    <option value="女">女</option>
                 </select>
-            </div>
-
-
-            <div class="field full">
-                <label>出生地</label>
-
-                <div class="geo-row">
-
-                    <input
-                        id="birthPlace"
-                        type="text"
-                        placeholder="例如：浙江省台州市 / 上海市 / Tokyo"
-                    >
-
-                    <button
-                        class="geo-button"
-                        onclick="autoGeocode()"
-                        type="button"
-                    >
-                        自动获取经纬度
-                    </button>
-
-                </div>
-
-                <div class="geo-status" id="geoStatus">
-                    输入出生地后，点击“自动获取经纬度”。系统会根据出生地搜索经度、纬度。
-                </div>
-            </div>
-
-
-            <div class="field">
-                <label>经度 Longitude</label>
-
-                <input
-                    id="longitude"
-                    type="number"
-                    step="0.000001"
-                    placeholder="自动获取"
-                >
-            </div>
-
-
-            <div class="field">
-                <label>纬度 Latitude</label>
-
-                <input
-                    id="latitude"
-                    type="number"
-                    step="0.000001"
-                    placeholder="自动获取"
-                >
             </div>
 
 
@@ -985,8 +1010,8 @@ body.dark .modal-content{
                 <label>时区</label>
 
                 <select id="timezone">
-                    <option value="8">UTC+8</option>
-                    <option value="9">UTC+9</option>
+                    <option value="8">UTC+8（中国大陆/香港/台湾/新加坡）</option>
+                    <option value="9">UTC+9（日本/韩国）</option>
                     <option value="7">UTC+7</option>
                     <option value="6">UTC+6</option>
                     <option value="5">UTC+5</option>
@@ -1005,1641 +1030,1883 @@ body.dark .modal-content{
                     <option value="-8">UTC-8</option>
                     <option value="-9">UTC-9</option>
                     <option value="-10">UTC-10</option>
+                    <option value="-11">UTC-11</option>
+                    <option value="-12">UTC-12</option>
                 </select>
             </div>
 
 
+            <div class="field full">
+                <label>出生地</label>
+
+                <div class="coordinate-row">
+
+                    <input
+                        id="birthPlace"
+                        type="text"
+                        placeholder="例如：浙江台州、上海、北京、东京"
+                    >
+
+                    <button
+                        class="btn"
+                        id="geoBtn"
+                        type="button"
+                    >
+                        自动获取经纬度
+                    </button>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                        <input
+                            id="longitude"
+                            type="number"
+                            step="0.0001"
+                            placeholder="经度，例如 121.4200"
+                        >
+
+                        <input
+                            id="latitude"
+                            type="number"
+                            step="0.0001"
+                            placeholder="纬度，例如 28.6600"
+                        >
+                    </div>
+
+                </div>
+
+                <div class="hint">
+                    输入出生地后点击“自动获取经纬度”。常见城市优先使用内置坐标；其他地点会尝试通过公开地理编码服务查询。
+                    如果网络环境无法查询，可以直接手动填写经纬度。
+                </div>
+            </div>
+
+
             <div class="field">
-                <label>排盘流派</label>
+                <label>排盘算法</label>
 
                 <select id="school">
-                    <option value="default">中州/常用算法</option>
-                    <option value="zhongzhou">中州算法</option>
+                    <option value="default">通行本（三合体系）</option>
+                    <option value="zhongzhou">中州派算法</option>
                 </select>
             </div>
 
 
             <div class="field">
-                <label>中州星曜类型</label>
+                <label>中州派类型</label>
 
-                <select id="zhongzhouType">
+                <select id="astroType">
                     <option value="heaven">天盘</option>
                     <option value="earth">地盘</option>
                     <option value="human">人盘</option>
                 </select>
             </div>
 
+
+            <div class="field">
+                <label>流年分析年份</label>
+
+                <input
+                    id="analysisYear"
+                    type="number"
+                    min="1"
+                    max="2100"
+                    placeholder="例如：2026"
+                >
+            </div>
+
+
+            <div class="field">
+                <label>显示模式</label>
+
+                <select id="themeMode">
+                    <option value="light">米白传统</option>
+                    <option value="dark">深色传统</option>
+                </select>
+            </div>
+
         </div>
 
 
-        <div class="switch-row">
+        <div class="checkbox-row">
 
-            <label class="switch">
-                <input
-                    type="checkbox"
-                    id="trueSolar"
-                >
-
-                <span class="slider"></span>
+            <label class="checkbox">
+                <input id="trueSolar" type="checkbox" checked>
+                使用真太阳时
             </label>
 
-            <span>
-                使用真太阳时
-            </span>
+
+            <label class="checkbox">
+                <input id="leapMonth" type="checkbox">
+                农历闰月
+            </label>
 
         </div>
 
 
-        <div
-            class="geo-status"
-            style="margin-top:5px"
-        >
-            真太阳时会结合出生地经度与时区进行地方时修正。
-        </div>
-
-
-        <div id="formError"></div>
-
-
-        <div class="actions no-print">
+        <div class="actions">
 
             <button
-                class="btn primary"
-                onclick="generateChart()"
+                class="btn btn-primary"
+                id="chartBtn"
+                type="button"
             >
-                ✦ 开始排盘
+                开始排盘
             </button>
 
             <button
                 class="btn"
-                onclick="resetForm()"
+                id="saveBtn"
+                type="button"
+            >
+                保存当前资料
+            </button>
+
+            <button
+                class="btn"
+                id="loadBtn"
+                type="button"
+            >
+                读取保存资料
+            </button>
+
+            <button
+                class="btn"
+                id="clearBtn"
+                type="button"
             >
                 清空
             </button>
 
-            <button
-                class="btn"
-                onclick="saveCurrentChart()"
-            >
-                保存命盘
-            </button>
-
         </div>
 
-    </div>
+    </section>
 
 
-    <!-- 基础信息 -->
-    <div
-        class="card"
-        id="basicCard"
-        style="display:none"
+    <!-- =========================
+         校盘信息
+    ========================== -->
+
+    <section
+        class="section"
+        id="verificationSection"
+        style="display:none;"
     >
 
-        <div class="card-title">
-            ② 命盘基本信息
+        <div class="section-title">
+            排盘校验信息
+        </div>
+
+        <div class="analysis-note">
+            这里专门用来和其他排盘软件逐项核对。
+            如果你要和文墨天机核对，建议先确认：历法、出生时间、真太阳时、时辰、排盘算法以及四化体系是否一致。
         </div>
 
         <div
-            class="info-grid"
-            id="basicInfo"
-        ></div>
+            class="data-table-wrap"
+            style="margin-top:12px;"
+        >
+            <table class="data-table">
+                <tbody id="verificationTable"></tbody>
+            </table>
+        </div>
 
-    </div>
+    </section>
 
 
-    <!-- 大限/流年 -->
-    <div
-        class="card toolbar-card"
-        id="horoscopeCard"
-        style="display:none"
+    <!-- =========================
+         命盘
+    ========================== -->
+
+    <section
+        class="section"
+        id="chartSection"
+        style="display:none;"
     >
 
-        <div class="card-title">
-            ③ 大限 / 流年
-        </div>
-
-        <div class="toolbar">
-
-            <label>大限：</label>
-
-            <select
-                id="decadalSelect"
-                onchange="updateDecadal()"
-            ></select>
-
-
-            <label>流年：</label>
-
-            <input
-                id="yearInput"
-                type="number"
-                min="1900"
-                max="2200"
-            >
-
-            <button
-                class="btn"
-                onclick="updateYear()"
-            >
-                查看流年
-            </button>
-
-            <button
-                class="btn"
-                onclick="clearHoroscope()"
-            >
-                清除流年
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- 命盘 -->
-    <div
-        class="card"
-        id="chartCard"
-        style="display:none"
-    >
-
-        <div class="card-title">
-            ④ 十二宫命盘
-        </div>
-
-        <div class="geo-status">
-            点击宫位可以查看该宫的基础信息；点击星曜可以查看星曜说明。
+        <div class="section-title">
+            十二宫命盘
         </div>
 
         <div class="chart-wrapper">
 
             <div
-                class="chart"
-                id="chart"
-            ></div>
+                class="chart-board"
+                id="chartBoard"
+            >
+
+                <!--
+                    传统固定地支位置：
+
+                    巳  午  未  申
+                    辰  中  中  酉
+                    卯  中  中  戌
+                    寅  丑  子  亥
+                -->
+
+            </div>
 
         </div>
 
-    </div>
+        <div class="chart-legend">
+
+            <div class="legend-item">
+                <span class="legend-dot"></span>
+                普通宫位
+            </div>
+
+            <div class="legend-item">
+                <span
+                    class="legend-dot"
+                    style="background:#fff9f5;"
+                ></span>
+                三方四正
+            </div>
+
+            <div class="legend-item">
+                <span
+                    class="tag body"
+                >
+                    身
+                </span>
+                身宫
+            </div>
+
+            <div class="legend-item">
+                <span
+                    class="tag original"
+                >
+                    来
+                </span>
+                来因宫
+            </div>
+
+        </div>
+
+    </section>
 
 
-    <!-- 命盘解析 -->
-    <div
-        class="card"
-        id="analysisCard"
-        style="display:none"
+    <!-- =========================
+         运限
+    ========================== -->
+
+    <section
+        class="section"
+        id="cycleSection"
+        style="display:none;"
     >
 
-        <div class="card-title">
-            ⑤ 命盘大白话解析
+        <div class="section-title">
+            大限 / 流年
+        </div>
+
+        <div class="control-bar">
+
+            <span class="control-label">
+                当前分析层级：
+            </span>
+
+            <div class="cycle-buttons">
+
+                <button
+                    class="cycle-btn active"
+                    data-cycle="natal"
+                    type="button"
+                >
+                    本命
+                </button>
+
+                <button
+                    class="cycle-btn"
+                    data-cycle="decadal"
+                    type="button"
+                >
+                    大限
+                </button>
+
+                <button
+                    class="cycle-btn"
+                    data-cycle="yearly"
+                    type="button"
+                >
+                    流年
+                </button>
+
+            </div>
+
         </div>
 
         <div
-            id="analysis"
-            class="analysis-list"
-        ></div>
-
-    </div>
-
-
-    <!-- 四化 -->
-    <div
-        class="card"
-        id="mutagenCard"
-        style="display:none"
-    >
-
-        <div class="card-title">
-            ⑥ 四化信息
+            class="cycle-info"
+            id="cycleInfo"
+        >
+            本命盘
         </div>
 
-        <div id="mutagenInfo"></div>
-
-    </div>
+    </section>
 
 
-    <!-- 格局 -->
-    <div
-        class="card"
-        id="patternCard"
-        style="display:none"
+    <!-- =========================
+         大白话解析
+    ========================== -->
+
+    <section
+        class="section"
+        id="analysisSection"
+        style="display:none;"
     >
 
-        <div class="card-title">
-            ⑦ 基础格局提示
+        <div class="section-title">
+            命盘大白话解析
         </div>
 
-        <div id="patterns"></div>
-
-    </div>
-
-
-    <!-- 知识库 -->
-    <div
-        class="card"
-        id="knowledgeCard"
-        style="display:none"
-    >
-
-        <div class="card-title">
-            ⑧ 当前宫位知识
-        </div>
-
-        <div id="knowledge"></div>
-
-    </div>
-
-
-    <!-- 本地保存 -->
-    <div
-        class="card no-print"
-        id="savedCard"
-    >
-
-        <div class="card-title">
-            ⑨ 本地保存的命盘
+        <div class="analysis-note">
+            以下文字不是预设的固定宫位介绍，而是根据当前命盘实际生成：
+            <b>本宫星曜 → 三方四正 → 对宫 → 四化 → 身宫 → 大限/流年</b>。
+            每个结论下面同时显示“依据”，方便你知道这句话是根据什么生成的。
         </div>
 
         <div
-            id="savedList"
-            class="saved-list"
+            class="analysis-grid"
+            id="analysisGrid"
+            style="margin-top:14px;"
         ></div>
 
-    </div>
+    </section>
 
 
-    <!-- 导出 -->
-    <div
-        class="card no-print"
-        id="exportCard"
-        style="display:none"
+    <!-- =========================
+         四化
+    ========================== -->
+
+    <section
+        class="section"
+        id="mutagenSection"
+        style="display:none;"
     >
 
-        <div class="card-title">
-            ⑩ 导出
+        <div class="section-title">
+            生年四化
+        </div>
+
+        <div
+            class="data-table-wrap"
+        >
+
+            <table class="data-table">
+
+                <thead>
+                    <tr>
+                        <th>四化</th>
+                        <th>星曜</th>
+                        <th>所在宫位</th>
+                        <th>解释入口</th>
+                    </tr>
+                </thead>
+
+                <tbody id="mutagenTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         十二宫明细
+    ========================== -->
+
+    <section
+        class="section"
+        id="detailSection"
+        style="display:none;"
+    >
+
+        <div class="section-title">
+            十二宫数据明细
+        </div>
+
+        <div class="data-table-wrap">
+
+            <table class="data-table">
+
+                <thead>
+                    <tr>
+                        <th>宫位</th>
+                        <th>地支</th>
+                        <th>宫干</th>
+                        <th>主星</th>
+                        <th>辅星</th>
+                        <th>杂曜</th>
+                        <th>四化</th>
+                        <th>大限</th>
+                    </tr>
+                </thead>
+
+                <tbody id="detailTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         导出
+    ========================== -->
+
+    <section
+        class="section no-print"
+        id="exportSection"
+        style="display:none;"
+    >
+
+        <div class="section-title">
+            导出
         </div>
 
         <div class="actions">
 
             <button
-                class="btn"
-                onclick="exportPNG()"
+                class="btn btn-gold"
+                id="printBtn"
+                type="button"
             >
-                导出 PNG
-            </button>
-
-            <button
-                class="btn"
-                onclick="window.print()"
-            >
-                打印 / PDF
+                打印 / 保存 PDF
             </button>
 
         </div>
 
-    </div>
-
-
-    <div class="footer">
-        紫微斗数排盘研究工具 · 仅供传统文化研究与娱乐参考
-        <br>
-        命理内容不具备科学预测效力，请理性看待。
-    </div>
-
-</div>
-
-
-<!-- 星曜弹窗 -->
-<div
-    class="modal"
-    id="starModal"
-    onclick="closeModal(event)"
->
-
-    <div
-        class="modal-content"
-        onclick="event.stopPropagation()"
-    >
-
-        <div class="modal-head">
-
-            <strong id="starModalTitle">
-                星曜
-            </strong>
-
-            <button
-                class="modal-close"
-                onclick="closeStarModal()"
-            >
-                ×
-            </button>
-
+        <div class="hint">
+            浏览器打印窗口中选择“保存为 PDF”，即可保存命盘。
         </div>
 
-        <div id="starModalBody"></div>
-
-    </div>
-
-</div>
+    </section>
 
 
-<!-- 宫位弹窗 -->
-<div
-    class="modal"
-    id="palaceModal"
-    onclick="closePalaceModal(event)"
->
+    <!-- =========================
+         免责声明
+    ========================== -->
 
-    <div
-        class="modal-content"
-        onclick="event.stopPropagation()"
-    >
+    <section class="section">
 
-        <div class="modal-head">
-
-            <strong id="palaceModalTitle">
-                宫位
-            </strong>
-
-            <button
-                class="modal-close"
-                onclick="closePalaceModal()"
-            >
-                ×
-            </button>
-
+        <div class="notice" style="margin:0;">
+            <b>使用说明：</b><br>
+            本网站仅为传统文化紫微斗数研究、娱乐参考，
+            不构成人生、婚姻、投资、医疗决策依据；
+            命理属于民俗文化，不具备科学预测效力，请理性看待。
         </div>
 
-        <div id="palaceModalBody"></div>
-
-    </div>
+    </section>
 
 </div>
 
 
 <script>
-/* =========================================================
-   基础变量
-========================================================= */
+/* ============================================================
+   紫微斗数研究工具
+   ============================================================ */
+
+(function () {
+
+"use strict";
+
+
+/* ============================================================
+   全局变量
+============================================================ */
 
 let currentChart = null;
+let currentForm = null;
+let currentCycle = "natal";
+let currentAnalysisYear = new Date().getFullYear();
 
-let currentForm = {
-    calendar: "solar",
-    date: "",
-    time: "",
-    gender: "",
-    birthPlace: "",
-    longitude: "",
-    latitude: "",
-    timezone: 8,
-    trueSolar: false,
-    school: "default",
-    zhongzhouType: "heaven",
-    isLeapMonth: false
+const ZHI_ORDER = [
+    "寅","卯","辰","巳","午","未",
+    "申","酉","戌","亥","子","丑"
+];
+
+const PALACE_LAYOUT = {
+    "巳": "r1c1",
+    "午": "r1c2",
+    "未": "r1c3",
+    "申": "r1c4",
+
+    "辰": "r2c1",
+    "酉": "r2c4",
+
+    "卯": "r3c1",
+    "戌": "r3c4",
+
+    "寅": "r4c1",
+    "丑": "r4c2",
+    "子": "r4c3",
+    "亥": "r4c4"
 };
 
-let selectedPalaceIndex = -1;
 
-let geocoderUrl = [
-    "https://",
-    "nominatim.openstreetmap.org/search"
-].join("");
+const PALACE_ORDER = [
+    "命宫",
+    "兄弟",
+    "夫妻",
+    "子女",
+    "财帛",
+    "疾厄",
+    "迁移",
+    "仆役",
+    "官禄",
+    "田宅",
+    "福德",
+    "父母"
+];
 
 
-/* =========================================================
-   备用城市坐标
-   常见城市直接使用，减少网络请求
-========================================================= */
+const STAR_TRAITS = {
+
+    "紫微": "核心性、主导性、统筹能力、对格局和掌控感的要求较明显",
+    "天机": "思考、变化、学习、规划、信息处理和灵活调整",
+    "太阳": "表达、公开性、行动力、责任感以及对外部舞台的需求",
+    "武曲": "执行、资源、财务、效率、结果导向",
+    "天同": "舒适、协调、人情、享受和相对柔和的处理方式",
+    "廉贞": "规则、欲望、边界、关系复杂度和个人选择",
+    "天府": "资源管理、稳定、储备、组织与现实经营",
+    "太阴": "细腻、规划、财务、安全感、内在感受",
+    "贪狼": "社交、欲望、审美、兴趣、资源整合和变化",
+    "巨门": "语言、分析、质疑、沟通以及容易产生观点碰撞",
+    "天相": "协调、规则、公平、合作以及处理关系的能力",
+    "天梁": "责任、保护、原则、经验以及解决问题",
+    "七杀": "决断、压力、竞争、突破和高强度环境",
+    "破军": "变化、重构、突破旧模式以及重新开始",
+
+    "左辅": "协助、团队、贵人和获得支持",
+    "右弼": "协调、人际支持和合作资源",
+    "文昌": "学习、文字、表达、逻辑与考试",
+    "文曲": "审美、表达、兴趣、创意和细腻感受",
+    "天魁": "机会、提携、外部帮助",
+    "天钺": "资源、贵人和关键节点的协助",
+    "禄存": "资源积累、现实利益和稳定性",
+    "天马": "流动、变化、迁移、跨地区与行动",
+
+    "擎羊": "竞争、压力、直接冲突和事情推进时的阻力",
+    "陀罗": "拖延、反复、隐性阻力和过程复杂度",
+    "火星": "突发、急促、情绪张力和行动加速",
+    "铃星": "内在压力、突发变化和敏感性",
+    "地空": "抽离、理想化、落差或重新定义价值",
+    "地劫": "资源波动、损耗、重新调整和风险意识"
+};
+
+
+/* ============================================================
+   常见城市坐标
+============================================================ */
 
 const CITY_COORDS = {
 
-    "北京":[116.4074,39.9042],
-    "北京市":[116.4074,39.9042],
+    "北京": [116.4074, 39.9042],
+    "上海": [121.4737, 31.2304],
+    "广州": [113.2644, 23.1291],
+    "深圳": [114.0579, 22.5431],
+    "杭州": [120.1551, 30.2741],
+    "南京": [118.7969, 32.0603],
+    "苏州": [120.5853, 31.2990],
+    "无锡": [120.3119, 31.4912],
+    "宁波": [121.5440, 29.8683],
+    "温州": [120.6994, 27.9949],
+    "台州": [121.4208, 28.6561],
+    "温岭": [121.3856, 28.3725],
+    "临海": [121.1146, 28.8585],
+    "绍兴": [120.5821, 30.0515],
+    "嘉兴": [120.7555, 30.7461],
+    "金华": [119.6474, 29.0791],
+    "义乌": [120.0751, 29.3068],
+    "湖州": [120.0868, 30.8943],
+    "舟山": [122.2072, 29.9853],
 
-    "上海":[121.4737,31.2304],
-    "上海市":[121.4737,31.2304],
+    "福州": [119.2965, 26.0745],
+    "厦门": [118.0894, 24.4798],
+    "泉州": [118.6757, 24.8741],
+    "南昌": [115.8579, 28.6829],
+    "长沙": [112.9388, 28.2282],
+    "武汉": [114.3055, 30.5928],
+    "郑州": [113.6254, 34.7466],
+    "济南": [117.1201, 36.6512],
+    "青岛": [120.3826, 36.0671],
+    "合肥": [117.2272, 31.8206],
+    "成都": [104.0665, 30.5723],
+    "重庆": [106.5516, 29.5630],
+    "昆明": [102.8329, 24.8801],
+    "贵阳": [106.6302, 26.6477],
+    "西安": [108.9398, 34.3416],
+    "兰州": [103.8343, 36.0611],
+    "沈阳": [123.4315, 41.8057],
+    "长春": [125.3235, 43.8171],
+    "哈尔滨": [126.6424, 45.7567],
+    "石家庄": [114.5149, 38.0428],
+    "太原": [112.5489, 37.8706],
+    "呼和浩特": [111.7492, 40.8426],
+    "乌鲁木齐": [87.6168, 43.8256],
+    "海口": [110.1983, 20.0440],
+    "三亚": [109.5119, 18.2528],
 
-    "广州":[113.2644,23.1291],
-    "广州市":[113.2644,23.1291],
+    "香港": [114.1694, 22.3193],
+    "澳门": [113.5439, 22.1987],
+    "台北": [121.5654, 25.0330],
+    "高雄": [120.3014, 22.6273],
 
-    "深圳":[114.0579,22.5431],
-    "深圳市":[114.0579,22.5431],
+    "东京": [139.6917, 35.6895],
+    "大阪": [135.5023, 34.6937],
+    "京都": [135.7681, 35.0116],
+    "名古屋": [136.9066, 35.1815],
+    "福冈": [130.4017, 33.5904],
+    "札幌": [141.3545, 43.0618],
 
-    "杭州":[120.1551,30.2741],
-    "杭州市":[120.1551,30.2741],
-
-    "南京":[118.7969,32.0603],
-    "南京市":[118.7969,32.0603],
-
-    "苏州":[120.5853,31.2989],
-    "苏州市":[120.5853,31.2989],
-
-    "成都":[104.0668,30.5728],
-    "成都市":[104.0668,30.5728],
-
-    "重庆":[106.5516,29.5630],
-    "重庆市":[106.5516,29.5630],
-
-    "武汉":[114.3055,30.5928],
-    "武汉市":[114.3055,30.5928],
-
-    "西安":[108.9398,34.3416],
-    "西安市":[108.9398,34.3416],
-
-    "天津":[117.2000,39.1333],
-    "天津市":[117.2000,39.1333],
-
-    "青岛":[120.3826,36.0671],
-    "青岛市":[120.3826,36.0671],
-
-    "厦门":[118.0894,24.4798],
-    "厦门市":[118.0894,24.4798],
-
-    "福州":[119.2965,26.0745],
-    "福州市":[119.2965,26.0745],
-
-    "济南":[117.1201,36.6512],
-    "济南市":[117.1201,36.6512],
-
-    "郑州":[113.6254,34.7466],
-    "郑州市":[113.6254,34.7466],
-
-    "长沙":[112.9388,28.2282],
-    "长沙市":[112.9388,28.2282],
-
-    "昆明":[102.8329,24.8801],
-    "昆明市":[102.8329,24.8801],
-
-    "贵阳":[106.6302,26.6477],
-    "贵阳市":[106.6302,26.6477],
-
-    "沈阳":[123.4315,41.8057],
-    "沈阳市":[123.4315,41.8057],
-
-    "哈尔滨":[126.6424,45.7567],
-    "哈尔滨市":[126.6424,45.7567],
-
-    "长春":[125.3235,43.8171],
-    "长春市":[125.3235,43.8171],
-
-    "大连":[121.6147,38.9140],
-    "大连市":[121.6147,38.9140],
-
-    "宁波":[121.5503,29.8746],
-    "宁波市":[121.5503,29.8746],
-
-    "温州":[120.6994,27.9943],
-    "温州市":[120.6994,27.9943],
-
-    "台州":[121.4208,28.6564],
-    "台州市":[121.4208,28.6564],
-
-    "绍兴":[120.5820,30.0515],
-    "绍兴市":[120.5820,30.0515],
-
-    "金华":[119.6474,29.0791],
-    "金华市":[119.6474,29.0791],
-
-    "合肥":[117.2272,31.8206],
-    "合肥市":[117.2272,31.8206],
-
-    "南昌":[115.8582,28.6829],
-    "南昌市":[115.8582,28.6829],
-
-    "石家庄":[114.5149,38.0428],
-    "石家庄市":[114.5149,38.0428],
-
-    "太原":[112.5489,37.8706],
-    "太原市":[112.5489,37.8706],
-
-    "兰州":[103.8343,36.0611],
-    "兰州市":[103.8343,36.0611],
-
-    "乌鲁木齐":[87.6168,43.8256],
-    "乌鲁木齐市":[87.6168,43.8256],
-
-    "呼和浩特":[111.7519,40.8415],
-    "呼和浩特市":[111.7519,40.8415],
-
-    "海口":[110.3312,20.0311],
-    "海口市":[110.3312,20.0311],
-
-    "三亚":[109.5117,18.2528],
-    "三亚市":[109.5117,18.2528],
-
-    "香港":[114.1694,22.3193],
-    "澳门":[113.5439,22.1987],
-
-    "台北":[121.5654,25.0330],
-    "东京":[139.6917,35.6895],
-    "Tokyo":[139.6917,35.6895],
-
-    "大阪":[135.5023,34.6937],
-    "Osaka":[135.5023,34.6937],
-
-    "首尔":[126.9780,37.5665],
-    "Seoul":[126.9780,37.5665],
-
-    "新加坡":[103.8198,1.3521],
-    "Singapore":[103.8198,1.3521]
+    "首尔": [126.9780, 37.5665],
+    "釜山": [129.0756, 35.1796]
 };
 
 
-/* =========================================================
+/* ============================================================
+   DOM
+============================================================ */
+
+const $ = (id) => document.getElementById(id);
+
+
+/* ============================================================
    工具函数
-========================================================= */
+============================================================ */
 
-function showLoading(text){
-    document.getElementById("loadingText").textContent = text || "正在处理……";
-    document.getElementById("loading").classList.add("show");
-}
+function escapeHtml(value) {
 
-function hideLoading(){
-    document.getElementById("loading").classList.remove("show");
-}
-
-function escapeHtml(value){
-    return String(value ?? "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-}
-
-function setError(text){
-    document.getElementById("formError").innerHTML =
-        text
-        ? `<div class="error">${escapeHtml(text)}</div>`
-        : "";
-}
-
-function setGeoStatus(text, success=false){
-    document.getElementById("geoStatus").innerHTML =
-        `<span style="color:${success ? "#047857" : "#6b7280"}">${escapeHtml(text)}</span>`;
-}
-
-
-/* =========================================================
-   历法切换
-========================================================= */
-
-function setCalendar(type){
-
-    currentForm.calendar = type;
-
-    const solarRadio = document.getElementById("solarRadio");
-    const lunarRadio = document.getElementById("lunarRadio");
-
-    const birthDate = document.getElementById("birthDate");
-    const lunarDate = document.getElementById("lunarDate");
-
-    if(type === "solar"){
-
-        solarRadio.classList.add("active");
-        lunarRadio.classList.remove("active");
-
-        birthDate.style.display = "";
-        lunarDate.style.display = "none";
-
-    }else{
-
-        solarRadio.classList.remove("active");
-        lunarRadio.classList.add("active");
-
-        birthDate.style.display = "none";
-        lunarDate.style.display = "";
-    }
-}
-
-
-/* =========================================================
-   自动获取经纬度
-========================================================= */
-
-async function autoGeocode(){
-
-    const place =
-        document.getElementById("birthPlace").value.trim();
-
-    if(!place){
-        setGeoStatus("请先输入出生地。");
-        return;
+    if (value === null || value === undefined) {
+        return "";
     }
 
-    showLoading("正在搜索出生地经纬度……");
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 
-    try{
 
-        /* 先查本地常见城市 */
+function showError(message) {
 
-        const cleanPlace = place
-            .replace(/省/g,"")
-            .replace(/市/g,"")
-            .trim();
+    const el = $("formError");
 
-        let localKey = null;
+    el.innerHTML = escapeHtml(message);
+    el.style.display = "block";
 
-        if(CITY_COORDS[place]){
-            localKey = place;
-        }else if(CITY_COORDS[cleanPlace]){
-            localKey = cleanPlace;
-        }else{
+    window.scrollTo({
+        top: 0,
+        behavior: "auto"
+    });
+}
 
-            const keys = Object.keys(CITY_COORDS);
 
-            for(const key of keys){
+function clearError() {
 
-                if(
-                    place.includes(key) ||
-                    key.includes(place)
-                ){
-                    localKey = key;
-                    break;
-                }
+    const el = $("formError");
+
+    el.innerHTML = "";
+    el.style.display = "none";
+}
+
+
+function setStatus(message, ok) {
+
+    const el = $("libraryStatus");
+
+    el.innerHTML = escapeHtml(message);
+
+    el.className = ok
+        ? "status-ok"
+        : "status-error";
+}
+
+
+function normalizeName(value) {
+
+    return String(value || "")
+        .replace(/宫/g, "")
+        .trim();
+}
+
+
+function arrayNames(stars) {
+
+    if (!Array.isArray(stars)) {
+        return [];
+    }
+
+    return stars
+        .map(s => {
+            if (typeof s === "string") {
+                return s;
             }
+
+            return s && s.name
+                ? s.name
+                : "";
+        })
+        .filter(Boolean);
+}
+
+
+function unique(array) {
+
+    return [...new Set(array)];
+}
+
+
+function joinChinese(arr) {
+
+    const list = unique(arr.filter(Boolean));
+
+    if (!list.length) {
+        return "无";
+    }
+
+    return list.join("、");
+}
+
+
+function palaceStars(palace) {
+
+    if (!palace) {
+        return [];
+    }
+
+    return [
+        ...(palace.majorStars || []),
+        ...(palace.minorStars || []),
+        ...(palace.adjectiveStars || [])
+    ];
+}
+
+
+function majorNames(palace) {
+
+    return arrayNames(palace && palace.majorStars);
+}
+
+
+function minorNames(palace) {
+
+    return arrayNames(palace && palace.minorStars);
+}
+
+
+function adjectiveNames(palace) {
+
+    return arrayNames(palace && palace.adjectiveStars);
+}
+
+
+function allStarNames(palace) {
+
+    return [
+        ...majorNames(palace),
+        ...minorNames(palace),
+        ...adjectiveNames(palace)
+    ];
+}
+
+
+function hasAny(palace, names) {
+
+    const stars = allStarNames(palace);
+
+    return names.some(name => stars.includes(name));
+}
+
+
+function findStar(chart, name) {
+
+    try {
+
+        const star = chart.star(name);
+
+        if (star) {
+            return star;
         }
 
-        if(localKey){
+    } catch (e) {}
 
-            const coords = CITY_COORDS[localKey];
+    return null;
+}
 
-            document.getElementById("longitude").value =
-                coords[0];
 
-            document.getElementById("latitude").value =
-                coords[1];
+function starPalace(chart, name) {
 
-            setGeoStatus(
-                `已自动识别：${localKey} · 经度 ${coords[0]} · 纬度 ${coords[1]}`,
-                true
-            );
+    const star = findStar(chart, name);
 
-            hideLoading();
-            return;
+    if (!star) {
+        return null;
+    }
+
+    try {
+
+        const p = star.palace();
+
+        if (p) {
+            return p;
         }
 
+    } catch (e) {}
 
-        /* 如果本地没有，再请求公开地理编码服务 */
+    return null;
+}
 
-        const params = new URLSearchParams({
-            q: place,
-            format: "jsonv2",
-            limit: "1",
-            "accept-language": "zh-CN"
-        });
 
-        const response = await fetch(
-            geocoderUrl + "?" + params.toString(),
-            {
-                method:"GET"
-            }
-        );
+function palaceByName(chart, name) {
 
-        if(!response.ok){
-            throw new Error("地理编码服务暂时不可用");
-        }
+    try {
 
-        const data = await response.json();
+        return chart.palace(name);
 
-        if(!data || !data.length){
-            throw new Error("没有找到这个出生地");
-        }
+    } catch (e) {
 
-        const result = data[0];
-
-        const lat = parseFloat(result.lat);
-        const lon = parseFloat(result.lon);
-
-        if(!Number.isFinite(lat) || !Number.isFinite(lon)){
-            throw new Error("返回的经纬度无效");
-        }
-
-        document.getElementById("longitude").value =
-            lon.toFixed(6);
-
-        document.getElementById("latitude").value =
-            lat.toFixed(6);
-
-        setGeoStatus(
-            `已找到：${result.display_name || place} · 经度 ${lon.toFixed(6)} · 纬度 ${lat.toFixed(6)}`,
-            true
-        );
-
-    }catch(error){
-
-        console.error(error);
-
-        setGeoStatus(
-            "自动获取失败，请把出生地写得更完整，例如“浙江省台州市”或“Tokyo Japan”；也可以手动输入经纬度。"
-        );
-
-    }finally{
-
-        hideLoading();
+        return null;
     }
 }
 
 
-/* =========================================================
+function safeToJSON(value) {
+
+    try {
+
+        if (value && typeof value.toJSON === "function") {
+            return value.toJSON();
+        }
+
+    } catch (e) {}
+
+    return value;
+}
+
+
+/* ============================================================
+   时辰
+============================================================ */
+
+function getTimeIndex(hour, minute) {
+
+    const total = hour * 60 + minute;
+
+    // 23:00 - 23:59：晚子时
+    if (total >= 23 * 60) {
+        return 12;
+    }
+
+    // 00:00 - 00:59：早子时
+    if (total < 60) {
+        return 0;
+    }
+
+    return Math.floor((total - 60) / 120) + 1;
+}
+
+
+function timeIndexName(index) {
+
+    const names = [
+        "早子",
+        "丑",
+        "寅",
+        "卯",
+        "辰",
+        "巳",
+        "午",
+        "未",
+        "申",
+        "酉",
+        "戌",
+        "亥",
+        "晚子"
+    ];
+
+    return names[index] || "";
+}
+
+
+/* ============================================================
    真太阳时
-========================================================= */
+============================================================ */
 
-function getEquationOfTime(date){
+function dayOfYear(date) {
 
-    const start = new Date(
-        date.getFullYear(),
-        0,
-        0
-    );
+    const start = new Date(date.getFullYear(), 0, 0);
 
-    const diff =
-        date - start;
+    const diff = date - start;
 
-    const oneDay =
-        1000 * 60 * 60 * 24;
+    return Math.floor(diff / 86400000);
+}
 
-    const day =
-        Math.floor(diff / oneDay);
+
+function equationOfTime(date) {
+
+    const n = dayOfYear(date);
 
     const B =
-        2 * Math.PI * (day - 81) / 364;
+        2 * Math.PI * (n - 81) / 364;
 
-    const E =
+    return (
         9.87 * Math.sin(2 * B)
-        - 7.53 * Math.cos(B)
-        - 1.5 * Math.sin(B);
-
-    return E;
+        -
+        7.53 * Math.cos(B)
+        -
+        1.5 * Math.sin(B)
+    );
 }
 
 
 function applyTrueSolarTime(
-    date,
+    year,
+    month,
+    day,
+    hour,
+    minute,
     longitude,
     timezone
-){
+) {
 
-    const standardMeridian =
-        15 * timezone;
+    const local = new Date(
+        year,
+        month - 1,
+        day,
+        hour,
+        minute,
+        0,
+        0
+    );
+
+    const standardMeridian = timezone * 15;
 
     const longitudeCorrection =
         4 * (longitude - standardMeridian);
 
-    const equation =
-        getEquationOfTime(date);
+    const eot =
+        equationOfTime(local);
 
-    const totalMinutes =
-        longitudeCorrection + equation;
+    const correction =
+        longitudeCorrection + eot;
 
-    return new Date(
-        date.getTime()
-        + totalMinutes * 60000
-    );
-}
-
-
-/* =========================================================
-   时辰
-========================================================= */
-
-function getTimeIndex(date){
-
-    const minutes =
-        date.getHours() * 60
-        + date.getMinutes();
-
-    /* 23:00-24:00：晚子 */
-
-    if(minutes >= 1380){
-        return 12;
-    }
-
-    /* 00:00-01:00：早子 */
-
-    if(minutes < 60){
-        return 0;
-    }
-
-    /*
-       01-03 丑
-       03-05 寅
-       05-07 卯
-       ...
-    */
-
-    return Math.floor(
-        (minutes - 60) / 120
-    ) + 1;
-}
-
-
-const TIME_NAMES = [
-    "早子",
-    "丑",
-    "寅",
-    "卯",
-    "辰",
-    "巳",
-    "午",
-    "未",
-    "申",
-    "酉",
-    "戌",
-    "亥",
-    "晚子"
-];
-
-
-/* =========================================================
-   日期处理
-========================================================= */
-
-function buildDateInfo(){
-
-    const time =
-        document.getElementById("birthTime").value;
-
-    if(!time){
-        throw new Error("请填写出生时间。");
-    }
-
-    const timezone =
-        Number(document.getElementById("timezone").value);
-
-    const longitude =
-        Number(document.getElementById("longitude").value);
-
-    const latitude =
-        Number(document.getElementById("latitude").value);
-
-    let date;
-
-    let dateStr;
-
-    if(currentForm.calendar === "solar"){
-
-        const raw =
-            document.getElementById("birthDate").value;
-
-        if(!raw){
-            throw new Error("请填写出生日期。");
-        }
-
-        date =
-            new Date(
-                `${raw}T${time}:00`
-            );
-
-        if(Number.isNaN(date.getTime())){
-            throw new Error("出生日期或时间格式错误。");
-        }
-
-        dateStr = raw;
-
-    }else{
-
-        const raw =
-            document.getElementById("lunarDate").value.trim();
-
-        if(!raw){
-            throw new Error("请输入农历日期，例如：2002-06-18。");
-        }
-
-        dateStr = raw;
-
-        /*
-          农历模式先把年月日交给 iztro。
-          真太阳时主要用于公历时间计算；
-          如果用户选择农历并且勾选真太阳时，
-          页面会根据输入时间计算时辰。
-        */
-
-        date =
-            new Date(
-                `2000-01-01T${time}:00`
-            );
-    }
-
-    let correctedDate = date;
-
-    if(
-        document.getElementById("trueSolar").checked
-        &&
-        Number.isFinite(longitude)
-    ){
-
-        correctedDate =
-            applyTrueSolarTime(
-                date,
-                longitude,
-                timezone
-            );
-    }
-
-    const timeIndex =
-        getTimeIndex(correctedDate);
+    const corrected =
+        new Date(
+            local.getTime() +
+            correction * 60000
+        );
 
     return {
-        date,
-        correctedDate,
-        dateStr,
-        timeIndex,
-        timezone,
-        longitude,
-        latitude
+        original: local,
+        corrected,
+        correctionMinutes: correction,
+        equationOfTime: eot,
+        longitudeCorrection
     };
 }
 
 
-/* =========================================================
+/* ============================================================
    获取表单
-========================================================= */
+============================================================ */
 
-function readForm(){
+function getFormData() {
+
+    const year = parseInt($("birthYear").value, 10);
+    const month = parseInt($("birthMonth").value, 10);
+    const day = parseInt($("birthDay").value, 10);
+    const hour = parseInt($("birthHour").value, 10);
+    const minute = parseInt($("birthMinute").value, 10);
+
+    const calendar =
+        $("calendarType").value;
 
     const gender =
-        document.getElementById("gender").value;
+        $("gender").value;
 
-    if(!gender){
-        throw new Error("请选择性别。");
-    }
+    const place =
+        $("birthPlace").value.trim();
 
     const longitude =
-        Number(document.getElementById("longitude").value);
+        parseFloat($("longitude").value);
 
     const latitude =
-        Number(document.getElementById("latitude").value);
+        parseFloat($("latitude").value);
 
-    if(!Number.isFinite(longitude)){
-        throw new Error("请先自动获取或填写出生地经度。");
-    }
+    const timezone =
+        parseFloat($("timezone").value);
 
-    if(!Number.isFinite(latitude)){
-        throw new Error("请先自动获取或填写出生地纬度。");
-    }
+    const school =
+        $("school").value;
 
-    const dateInfo =
-        buildDateInfo();
+    const astroType =
+        $("astroType").value;
+
+    const analysisYear =
+        parseInt($("analysisYear").value, 10)
+        ||
+        new Date().getFullYear();
+
+    const trueSolar =
+        $("trueSolar").checked;
+
+    const isLeapMonth =
+        $("leapMonth").checked;
 
     return {
-
-        calendar: currentForm.calendar,
-
-        dateStr: dateInfo.dateStr,
-
-        time: document.getElementById("birthTime").value,
-
-        timeIndex: dateInfo.timeIndex,
-
-        timeName: TIME_NAMES[dateInfo.timeIndex],
-
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        calendar,
         gender,
-
-        birthPlace:
-            document.getElementById("birthPlace").value.trim(),
-
+        place,
         longitude,
-
         latitude,
-
-        timezone:
-            Number(document.getElementById("timezone").value),
-
-        trueSolar:
-            document.getElementById("trueSolar").checked,
-
-        school:
-            document.getElementById("school").value,
-
-        zhongzhouType:
-            document.getElementById("zhongzhouType").value,
-
-        isLeapMonth:false
+        timezone,
+        school,
+        astroType,
+        analysisYear,
+        trueSolar,
+        isLeapMonth
     };
 }
 
 
-/* =========================================================
-   加载 iztro
-========================================================= */
+/* ============================================================
+   校验
+============================================================ */
 
-let iztroReady = false;
+function validateForm(form) {
 
-function loadScript(url){
+    if (!Number.isFinite(form.year)) {
+        return "请输入出生年份。";
+    }
 
-    return new Promise(
-        (resolve,reject)=>{
+    if (!Number.isFinite(form.month)) {
+        return "请输入出生月份。";
+    }
 
-            const old =
-                document.querySelector(
-                    `script[data-library="${url}"]`
-                );
+    if (!Number.isFinite(form.day)) {
+        return "请输入出生日期。";
+    }
 
-            if(old){
+    if (!Number.isFinite(form.hour)) {
+        return "请选择出生小时。";
+    }
 
-                if(old.dataset.loaded === "true"){
-                    resolve();
-                    return;
-                }
+    if (!form.gender) {
+        return "请选择性别。";
+    }
 
-                old.addEventListener(
-                    "load",
-                    ()=>resolve(),
-                    {once:true}
-                );
+    if (!form.place) {
+        return "请输入出生地。";
+    }
 
-                old.addEventListener(
-                    "error",
-                    ()=>reject(),
-                    {once:true}
-                );
+    if (!Number.isFinite(form.longitude)) {
+        return "请填写经度，或者先点击“自动获取经纬度”。";
+    }
 
-                return;
-            }
+    if (!Number.isFinite(form.latitude)) {
+        return "请填写纬度，或者先点击“自动获取经纬度”。";
+    }
 
-            const script =
-                document.createElement("script");
+    if (form.longitude < -180 || form.longitude > 180) {
+        return "经度范围不正确。";
+    }
 
-            script.src = url;
-            script.async = false;
+    if (form.latitude < -90 || form.latitude > 90) {
+        return "纬度范围不正确。";
+    }
 
-            script.dataset.library = url;
+    return null;
+}
 
-            script.onload = ()=>{
-                script.dataset.loaded = "true";
-                resolve();
-            };
 
-            script.onerror = ()=>{
-                reject(
-                    new Error(
-                        "排盘组件加载失败"
-                    )
-                );
-            };
+/* ============================================================
+   日期字符串
+============================================================ */
 
-            document.head.appendChild(script);
-        }
+function dateString(
+    year,
+    month,
+    day
+) {
+
+    return [
+        year,
+        String(month).padStart(2, "0"),
+        String(day).padStart(2, "0")
+    ].join("-");
+}
+
+
+/* ============================================================
+   真太阳时后的数据
+============================================================ */
+
+function getAdjustedBirth(form) {
+
+    if (
+        !form.trueSolar ||
+        form.calendar !== "solar"
+    ) {
+
+        return {
+            year: form.year,
+            month: form.month,
+            day: form.day,
+            hour: form.hour,
+            minute: form.minute,
+            timeIndex:
+                getTimeIndex(
+                    form.hour,
+                    form.minute
+                ),
+            usedTrueSolar: false,
+            correctionMinutes: 0
+        };
+    }
+
+
+    const result =
+        applyTrueSolarTime(
+            form.year,
+            form.month,
+            form.day,
+            form.hour,
+            form.minute,
+            form.longitude,
+            form.timezone
+        );
+
+
+    return {
+        year: result.corrected.getFullYear(),
+        month: result.corrected.getMonth() + 1,
+        day: result.corrected.getDate(),
+        hour: result.corrected.getHours(),
+        minute: result.corrected.getMinutes(),
+        timeIndex:
+            getTimeIndex(
+                result.corrected.getHours(),
+                result.corrected.getMinutes()
+            ),
+        usedTrueSolar: true,
+        correctionMinutes:
+            result.correctionMinutes,
+        originalYear: form.year,
+        originalMonth: form.month,
+        originalDay: form.day,
+        originalHour: form.hour,
+        originalMinute: form.minute
+    };
+}
+
+
+/* ============================================================
+   排盘
+============================================================ */
+
+function createChart(form) {
+
+    if (
+        !window.iztro ||
+        !window.iztro.astro
+    ) {
+        throw new Error(
+            "排盘核心 iztro 尚未加载完成，请稍等几秒后再试。"
+        );
+    }
+
+
+    const adjusted =
+        getAdjustedBirth(form);
+
+
+    let dateStr =
+        dateString(
+            adjusted.year,
+            adjusted.month,
+            adjusted.day
+        );
+
+
+    const options = {
+
+        type: form.calendar,
+
+        dateStr,
+
+        timeIndex:
+            adjusted.timeIndex,
+
+        gender:
+            form.gender,
+
+        isLeapMonth:
+            form.isLeapMonth,
+
+        fixLeap: true,
+
+        language: "zh-CN",
+
+        config: {
+            algorithm:
+                form.school === "zhongzhou"
+                    ? "zhongzhou"
+                    : "default"
+        },
+
+        astroType:
+            form.astroType
+    };
+
+
+    const chart =
+        window.iztro.astro.withOptions(
+            options
+        );
+
+
+    if (!chart) {
+        throw new Error(
+            "排盘核心没有返回命盘，请检查出生日期。"
+        );
+    }
+
+
+    return {
+        chart,
+        adjusted
+    };
+}
+
+
+/* ============================================================
+   三方四正
+============================================================ */
+
+function getSurrounded(chart, palaceName) {
+
+    try {
+
+        return chart.surroundedPalaces(
+            palaceName
+        );
+
+    } catch (e) {
+
+        return null;
+    }
+}
+
+
+function surroundedList(chart, palaceName) {
+
+    const sur =
+        getSurrounded(
+            chart,
+            palaceName
+        );
+
+    if (!sur) {
+        return [];
+    }
+
+    return [
+        sur.target,
+        sur.opposite,
+        sur.wealth,
+        sur.career
+    ].filter(Boolean);
+}
+
+
+function surroundedStars(chart, palaceName) {
+
+    const list =
+        surroundedList(
+            chart,
+            palaceName
+        );
+
+    return unique(
+        list.flatMap(
+            palace => allStarNames(palace)
+        )
     );
 }
 
 
-async function ensureIztro(){
+function surroundedStarPalaceMap(
+    chart,
+    palaceName
+) {
 
-    if(
-        window.iztro &&
-        window.iztro.astro
-    ){
-        iztroReady = true;
-        return;
-    }
-
-    const primary = [
-        "https://",
-        "cdn.jsdelivr.net/npm/iztro@2.6.0/dist/iztro-v2.6.0.min.js"
-    ].join("");
-
-    const backup = [
-        "https://",
-        "unpkg.com/iztro@2.6.0/dist/iztro-v2.6.0.min.js"
-    ].join("");
-
-    try{
-
-        await loadScript(primary);
-
-    }catch(e){
-
-        await loadScript(backup);
-    }
-
-    if(
-        !window.iztro ||
-        !window.iztro.astro
-    ){
-
-        throw new Error(
-            "紫微斗数排盘组件没有成功加载。请刷新页面后再试。"
+    const list =
+        surroundedList(
+            chart,
+            palaceName
         );
-    }
 
-    iztroReady = true;
+    const result = [];
+
+    list.forEach(
+        palace => {
+
+            allStarNames(palace)
+                .forEach(
+                    star => {
+
+                        result.push({
+                            star,
+                            palace:
+                                palace.name
+                        });
+
+                    }
+                );
+
+        }
+    );
+
+    return result;
 }
 
 
-/* =========================================================
-   开始排盘
-========================================================= */
+/* ============================================================
+   星曜标签
+============================================================ */
 
-async function generateChart(){
+function starHtml(star, major) {
 
-    setError("");
-
-    try{
-
-        currentForm =
-            readForm();
-
-    }catch(error){
-
-        setError(
-            error.message || "请检查输入资料。"
-        );
-
-        return;
+    if (!star) {
+        return "";
     }
 
-    showLoading("正在加载排盘组件……");
+    const name =
+        typeof star === "string"
+            ? star
+            : star.name;
 
-    try{
-
-        await ensureIztro();
-
-        showLoading("正在生成紫微斗数命盘……");
-
-        currentChart =
-            window.iztro.astro.withOptions({
-
-                type:
-                    currentForm.calendar,
-
-                dateStr:
-                    currentForm.dateStr,
-
-                timeIndex:
-                    currentForm.timeIndex,
-
-                gender:
-                    currentForm.gender,
-
-                isLeapMonth:
-                    currentForm.isLeapMonth,
-
-                fixLeap:true,
-
-                language:"zh-CN",
-
-                config:{
-                    algorithm:
-                        currentForm.school === "zhongzhou"
-                        ? "zhongzhou"
-                        : "default"
-                },
-
-                astroType:
-                    currentForm.zhongzhouType
-            });
-
-
-        renderAll();
-
-        hideLoading();
-
-        document
-            .getElementById("basicCard")
-            .scrollIntoView({
-                behavior:"smooth",
-                block:"start"
-            });
-
-    }catch(error){
-
-        console.error(error);
-
-        hideLoading();
-
-        setError(
-            "排盘失败：" +
-            (error.message || "未知错误") +
-            "。如果这是第一次打开，请刷新一次页面再试。"
-        );
+    if (!name) {
+        return "";
     }
+
+
+    let brightness = "";
+
+    if (
+        typeof star === "object" &&
+        star.brightness
+    ) {
+        brightness =
+            `<span class="brightness">${escapeHtml(star.brightness)}</span>`;
+    }
+
+
+    let mutagen = "";
+
+    if (
+        typeof star === "object" &&
+        star.mutagen
+    ) {
+
+        const map = {
+            "禄": "mutagen-lu",
+            "祿": "mutagen-lu",
+            "权": "mutagen-quan",
+            "權": "mutagen-quan",
+            "科": "mutagen-ke",
+            "忌": "mutagen-ji"
+        };
+
+        const cls =
+            map[star.mutagen]
+            ||
+            "";
+
+        mutagen =
+            `<span class="mutagen ${cls}">
+                ${escapeHtml(star.mutagen)}
+             </span>`;
+    }
+
+
+    let cls =
+        major
+            ? "major-star"
+            : "minor-star";
+
+
+    if (
+        ["擎羊","陀罗","陀羅","火星","铃星","鈴星","地空","地劫"]
+            .includes(name)
+    ) {
+        cls += " star-bad";
+    }
+
+
+    return `
+        <span class="${cls}">
+            ${escapeHtml(name)}
+            ${brightness}
+            ${mutagen}
+        </span>
+    `;
 }
 
 
-/* =========================================================
-   渲染全部
-========================================================= */
+/* ============================================================
+   命盘中心
+============================================================ */
 
-function renderAll(){
+function getCenterInfo(chart) {
 
-    document.getElementById("basicCard").style.display = "";
-    document.getElementById("horoscopeCard").style.display = "";
-    document.getElementById("chartCard").style.display = "";
-    document.getElementById("analysisCard").style.display = "";
-    document.getElementById("mutagenCard").style.display = "";
-    document.getElementById("patternCard").style.display = "";
-    document.getElementById("knowledgeCard").style.display = "";
-    document.getElementById("exportCard").style.display = "";
+    const soul =
+        palaceByName(
+            chart,
+            "命宫"
+        );
 
-    renderBasicInfo();
-    renderDecadal();
-    renderChart();
-    renderAnalysis();
-    renderMutagen();
-    renderPatterns();
+    const body =
+        (() => {
 
-    if(
-        currentChart &&
-        currentChart.palaces &&
-        currentChart.palaces.length
-    ){
-        selectPalace(0);
-    }
+            try {
+
+                const p =
+                    chart.palaces.find(
+                        x => x.isBodyPalace
+                    );
+
+                return p || null;
+
+            } catch (e) {
+
+                return null;
+            }
+
+        })();
+
+
+    let fiveElement =
+        "";
+
+    try {
+
+        if (chart.fiveElementsClass) {
+            fiveElement =
+                chart.fiveElementsClass;
+        }
+
+    } catch (e) {}
+
+
+    let soulMaster =
+        chart.soul
+        ||
+        chart.soulStar
+        ||
+        "";
+
+    let bodyMaster =
+        chart.body
+        ||
+        chart.bodyStar
+        ||
+        "";
+
+
+    return {
+        soul,
+        body,
+        fiveElement,
+        soulMaster,
+        bodyMaster
+    };
 }
 
 
-/* =========================================================
-   基本信息
-========================================================= */
+/* ============================================================
+   渲染中心
+============================================================ */
 
-function renderBasicInfo(){
+function renderCenter(chart, form, adjusted) {
 
-    const ming =
-        currentChart.palaces.find(
-            p => p.name === "命宫"
+    const info =
+        getCenterInfo(chart);
+
+
+    const soul =
+        info.soul;
+
+
+    const body =
+        info.body;
+
+
+    const soulStars =
+        majorNames(soul);
+
+
+    const bodyStars =
+        majorNames(body);
+
+
+    const natalYearGan =
+        getYearGan(chart);
+
+
+    const mutagens =
+        getMutagenSummary(chart);
+
+
+    return `
+        <div class="center-inner">
+
+            <div>
+
+                <div class="center-title">
+                    紫微斗数命盘
+                </div>
+
+                <div class="center-subtitle">
+                    ${form.school === "zhongzhou"
+                        ? "中州派算法"
+                        : "通行本（三合体系）"}
+                </div>
+
+                <div class="center-info">
+
+                    <div class="info-item">
+                        <div class="info-label">
+                            性别
+                        </div>
+
+                        <div class="info-value">
+                            ${escapeHtml(form.gender)}
+                        </div>
+                    </div>
+
+
+                    <div class="info-item">
+                        <div class="info-label">
+                            五行局
+                        </div>
+
+                        <div class="info-value">
+                            ${escapeHtml(
+                                info.fiveElement || "—"
+                            )}
+                        </div>
+                    </div>
+
+
+                    <div class="info-item">
+                        <div class="info-label">
+                            命宫
+                        </div>
+
+                        <div class="info-value">
+                            ${soul
+                                ? escapeHtml(
+                                    soul.earthlyBranch || ""
+                                  )
+                                : "—"}
+                        </div>
+                    </div>
+
+
+                    <div class="info-item">
+                        <div class="info-label">
+                            身宫
+                        </div>
+
+                        <div class="info-value">
+                            ${body
+                                ? escapeHtml(
+                                    body.earthlyBranch || ""
+                                  )
+                                : "—"}
+                        </div>
+                    </div>
+
+
+                    <div class="info-item">
+                        <div class="info-label">
+                            命宫主星
+                        </div>
+
+                        <div class="info-value">
+                            ${escapeHtml(
+                                joinChinese(soulStars)
+                            )}
+                        </div>
+                    </div>
+
+
+                    <div class="info-item">
+                        <div class="info-label">
+                            身宫所在
+                        </div>
+
+                        <div class="info-value">
+                            ${body
+                                ? escapeHtml(
+                                    body.name || ""
+                                  )
+                                : "—"}
+                        </div>
+                    </div>
+
+
+                    <div class="info-item">
+                        <div class="info-label">
+                            出生地
+                        </div>
+
+                        <div class="info-value">
+                            ${escapeHtml(form.place)}
+                        </div>
+                    </div>
+
+
+                    <div class="info-item">
+                        <div class="info-label">
+                            时辰
+                        </div>
+
+                        <div class="info-value">
+                            ${escapeHtml(
+                                timeIndexName(
+                                    adjusted.timeIndex
+                                )
+                            )}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="center-four">
+
+                    <div>
+                        <small>化禄</small>
+                        <strong>
+                            ${escapeHtml(
+                                mutagens["禄"] || "—"
+                            )}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <small>化权</small>
+                        <strong>
+                            ${escapeHtml(
+                                mutagens["权"] || "—"
+                            )}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <small>化科</small>
+                        <strong>
+                            ${escapeHtml(
+                                mutagens["科"] || "—"
+                            )}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <small>化忌</small>
+                        <strong>
+                            ${escapeHtml(
+                                mutagens["忌"] || "—"
+                            )}
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+
+
+/* ============================================================
+   生年干
+============================================================ */
+
+function getYearGan(chart) {
+
+    try {
+
+        if (chart.yearStem) {
+            return chart.yearStem;
+        }
+
+    } catch (e) {}
+
+
+    try {
+
+        if (chart.palaces && chart.palaces.length) {
+
+            const first =
+                chart.palaces[0];
+
+            if (first && first.heavenlyStem) {
+
+                // 不能直接把宫干当年干，
+                // 这里只作为兜底。
+            }
+        }
+
+    } catch (e) {}
+
+
+    return "";
+}
+
+
+/* ============================================================
+   四化
+============================================================ */
+
+function getMutagenSummary(chart) {
+
+    const result = {
+        "禄": "",
+        "权": "",
+        "科": "",
+        "忌": ""
+    };
+
+
+    try {
+
+        const palaces =
+            chart.palaces || [];
+
+
+        palaces.forEach(
+            palace => {
+
+                const stars =
+                    palaceStars(
+                        palace
+                    );
+
+                stars.forEach(
+                    star => {
+
+                        if (
+                            star &&
+                            star.mutagen &&
+                            result.hasOwnProperty(
+                                star.mutagen
+                            )
+                        ) {
+
+                            result[
+                                star.mutagen
+                            ] =
+                                star.name
+                                +
+                                " · "
+                                +
+                                palace.name;
+
+                        }
+
+                    }
+                );
+
+            }
         );
 
-    const shen =
-        currentChart.palaces.find(
-            p => p.isBodyPalace
+    } catch (e) {}
+
+
+    return result;
+}
+
+
+/* ============================================================
+   渲染十二宫
+============================================================ */
+
+function renderChart(chart, form, adjusted) {
+
+    const board =
+        $("chartBoard");
+
+    board.innerHTML = "";
+
+
+    const palaces =
+        chart.palaces || [];
+
+
+    const byBranch = {};
+
+
+    palaces.forEach(
+        palace => {
+
+            byBranch[
+                palace.earthlyBranch
+            ] = palace;
+
+        }
+    );
+
+
+    const center =
+        document.createElement("div");
+
+    center.className =
+        "center";
+
+    center.innerHTML =
+        renderCenter(
+            chart,
+            form,
+            adjusted
         );
 
-    const items = [
+    board.appendChild(center);
 
-        ["历法",
-            currentForm.calendar === "solar"
-            ? "公历"
-            : "农历"
-        ],
 
-        ["出生日期",
-            currentForm.dateStr
-        ],
-
-        ["出生时间",
-            currentForm.time
-        ],
-
-        ["出生地",
-            currentForm.birthPlace || "未填写"
-        ],
-
-        ["性别",
-            currentForm.gender === "male"
-            ? "男"
-            : "女"
-        ],
-
-        ["出生时辰",
-            currentForm.timeName
-        ],
-
-        ["真太阳时",
-            currentForm.trueSolar
-            ? "已开启"
-            : "未开启"
-        ],
-
-        ["经度",
-            currentForm.longitude
-        ],
-
-        ["纬度",
-            currentForm.latitude
-        ],
-
-        ["时区",
-            "UTC" +
-            (currentForm.timezone >= 0 ? "+" : "")
-            + currentForm.timezone
-        ],
-
-        ["命宫",
-            ming
-            ? ming.earthlyBranch
-            : "-"
-        ],
-
-        ["身宫",
-            shen
-            ? shen.earthlyBranch
-            : "-"
-        ]
+    const orderedBranches = [
+        "巳","午","未","申",
+        "辰","酉",
+        "卯","戌",
+        "寅","丑","子","亥"
     ];
 
-    document.getElementById("basicInfo").innerHTML =
-        items.map(
-            item => `
-                <div class="info-item">
-                    <div class="info-label">
-                        ${escapeHtml(item[0])}
-                    </div>
 
-                    <div class="info-value">
-                        ${escapeHtml(item[1])}
-                    </div>
-                </div>
-            `
-        ).join("");
-}
-
-
-/* =========================================================
-   大限
-========================================================= */
-
-function renderDecadal(){
-
-    const select =
-        document.getElementById("decadalSelect");
-
-    select.innerHTML = "";
-
-    try{
-
-        if(
-            currentChart.horoscope &&
-            currentChart.horoscope.decadalList
-        ){
-
-            const list =
-                currentChart.horoscope.decadalList();
-
-            list.forEach(
-                (item,index)=>{
-
-                    const option =
-                        document.createElement("option");
-
-                    option.value = index;
-
-                    const ageRange =
-                        item.ageRange
-                        ? item.ageRange.join("-")
-                        : "";
-
-                    const yearRange =
-                        item.yearRange
-                        ? item.yearRange.join("-")
-                        : "";
-
-                    option.textContent =
-                        `第${index + 1}大限 · ${ageRange}岁 · ${yearRange}`;
-
-                    select.appendChild(option);
-                }
-            );
-        }
-
-    }catch(error){
-
-        console.warn(
-            "大限读取失败",
-            error
-        );
-    }
-}
-
-
-function updateDecadal(){
-
-    if(!currentChart){
-        return;
-    }
-
-    const index =
-        Number(
-            document.getElementById(
-                "decadalSelect"
-            ).value
-        );
-
-    try{
-
-        const list =
-            currentChart.horoscope.decadalList();
-
-        const selected =
-            list[index];
-
-        if(!selected){
-            return;
-        }
-
-        highlightDecadal(selected);
-
-    }catch(error){
-
-        console.warn(error);
-    }
-}
-
-
-function highlightDecadal(decadal){
-
-    if(
-        !decadal ||
-        !decadal.palace
-    ){
-        return;
-    }
-
-    const branch =
-        decadal.palace.earthlyBranch;
-
-    document
-        .querySelectorAll(".palace")
-        .forEach(el=>{
-
-            el.classList.remove("selected");
-
-            if(
-                el.dataset.branch === branch
-            ){
-                el.classList.add("selected");
-            }
-        });
-}
-
-
-/* =========================================================
-   流年
-========================================================= */
-
-function updateYear(){
-
-    const year =
-        Number(
-            document.getElementById(
-                "yearInput"
-            ).value
-        );
-
-    if(
-        !Number.isFinite(year) ||
-        year < 1900 ||
-        year > 2200
-    ){
-        alert("请输入 1900～2200 之间的年份。");
-        return;
-    }
-
-    try{
-
-        if(
-            currentChart.horoscope &&
-            currentChart.horoscope.byYear
-        ){
-
-            const yearly =
-                currentChart.horoscope.byYear(year);
-
-            if(yearly){
-                showYearlyInfo(yearly,year);
-                return;
-            }
-        }
-
-        alert(
-            `已选择流年 ${year}。当前版本主要展示本命十二宫及大限信息。`
-        );
-
-    }catch(error){
-
-        console.warn(error);
-
-        alert(
-            `已选择流年 ${year}。`
-        );
-    }
-}
-
-
-function showYearlyInfo(yearly,year){
-
-    let message =
-        `<strong>${year} 年流年</strong><br><br>`;
-
-    try{
-
-        if(yearly.palace){
-            message +=
-                `流年相关宫位：${escapeHtml(yearly.palace.name || "")}<br>`;
-        }
-
-        if(yearly.stars){
-
-            message +=
-                `相关星曜：${
-                    yearly.stars
-                    .map(s=>s.name)
-                    .join("、")
-                }<br>`;
-        }
-
-    }catch(e){}
-
-    document.getElementById("knowledge").innerHTML =
-        `<div class="success">${message}</div>`;
-}
-
-
-function clearHoroscope(){
-
-    document
-        .querySelectorAll(".palace")
-        .forEach(
-            el => el.classList.remove("selected")
-        );
-
-    document.getElementById(
-        "yearInput"
-    ).value = "";
-}
-
-
-/* =========================================================
-   十二宫布局
-========================================================= */
-
-const PALACE_POSITIONS = [
-    0,1,2,3,
-    11,null,null,4,
-    10,null,null,5,
-    9,8,7,6
-];
-
-
-function renderChart(){
-
-    const container =
-        document.getElementById("chart");
-
-    container.innerHTML = "";
-
-    PALACE_POSITIONS.forEach(
-        (palaceIndex)=>{
-
-            if(
-                palaceIndex === null
-            ){
-
-                const center =
-                    document.createElement("div");
-
-                center.className = "center-box";
-
-                center.innerHTML = `
-                    <div class="center-title">
-                        紫微斗数命盘
-                    </div>
-
-                    <div class="center-text">
-                        点击外圈十二宫查看宫位信息。<br><br>
-
-                        <b>命宫：</b>
-                        ${
-                            currentChart.palaces.find(
-                                p=>p.name==="命宫"
-                            )?.earthlyBranch || "-"
-                        }
-                        <br>
-
-                        <b>身宫：</b>
-                        ${
-                            currentChart.palaces.find(
-                                p=>p.isBodyPalace
-                            )?.earthlyBranch || "-"
-                        }
-                        <br><br>
-
-                        当前算法：
-                        ${
-                            currentForm.school === "zhongzhou"
-                            ? "中州算法"
-                            : "常用算法"
-                        }
-                    </div>
-                `;
-
-                container.appendChild(center);
-
-                return;
-            }
-
+    orderedBranches.forEach(
+        branch => {
 
             const palace =
-                currentChart.palaces[
-                    palaceIndex
-                ];
+                byBranch[branch];
 
-            if(!palace){
+            if (!palace) {
                 return;
             }
+
 
             const el =
                 document.createElement("div");
@@ -2647,1256 +2914,2940 @@ function renderChart(){
             el.className =
                 "palace";
 
-            if(palace.name === "命宫"){
-                el.classList.add("ming");
-            }
+            el.dataset.palace =
+                palace.name;
 
-            if(palace.isBodyPalace){
-                el.classList.add("shen");
-            }
-
-            el.dataset.branch =
-                palace.earthlyBranch || "";
-
-            el.onclick =
-                ()=>selectPalace(palaceIndex);
 
             const stars =
-                [
-                    ...(palace.majorStars || []),
-                    ...(palace.minorStars || []),
-                    ...(palace.adjectiveStars || [])
-                ];
+                palaceStars(
+                    palace
+                );
 
-            const starHtml =
-                stars.map(
-                    star => {
 
-                        let cls =
-                            star.type || "adjective";
+            const major =
+                palace.majorStars || [];
 
-                        if(
-                            cls === "tough"
-                            ||
-                            cls === "soft"
-                            ||
-                            cls === "major"
-                            ||
-                            cls === "adjective"
-                        ){}else{
-                            cls = "adjective";
-                        }
 
-                        return `
-                            <span
-                                class="star ${cls}"
-                                onclick="event.stopPropagation();showStarKnowledge('${escapeHtml(star.name)}')"
-                            >
-                                ${escapeHtml(star.name)}
+            const minor =
+                palace.minorStars || [];
 
-                                ${
-                                    star.brightness
-                                    ? `<span class="brightness">
-                                        ${escapeHtml(star.brightness)}
-                                      </span>`
-                                    : ""
-                                }
 
-                                ${
-                                    star.mutagen
-                                    ? `<span class="mutagen">
-                                        ${escapeHtml(star.mutagen)}
-                                      </span>`
-                                    : ""
-                                }
+            const adjective =
+                palace.adjectiveStars || [];
 
-                            </span>
-                        `;
-                    }
-                ).join("");
+
+            const majorHtml =
+                major
+                    .map(
+                        star =>
+                            starHtml(
+                                star,
+                                true
+                            )
+                    )
+                    .join("");
+
+
+            const minorHtml =
+                minor
+                    .map(
+                        star =>
+                            starHtml(
+                                star,
+                                false
+                            )
+                    )
+                    .join("");
+
+
+            const adjectiveHtml =
+                adjective
+                    .map(
+                        star =>
+                            `<span class="adjective-star">
+                                ${escapeHtml(
+                                    typeof star === "string"
+                                        ? star
+                                        : star.name
+                                )}
+                            </span>`
+                    )
+                    .join("");
+
+
+            const flags = [];
+
+
+            if (palace.isBodyPalace) {
+
+                flags.push(
+                    `<span class="tag body">身宫</span>`
+                );
+
+            }
+
+
+            if (palace.isOriginalPalace) {
+
+                flags.push(
+                    `<span class="tag original">来因</span>`
+                );
+
+            }
+
+
+            const decadalText =
+                palace.decadal
+                    ? formatDecadal(
+                        palace.decadal
+                    )
+                    : "";
+
+
+            const changsheng =
+                palace.changsheng12
+                    || "";
 
 
             el.innerHTML = `
 
                 <div class="palace-header">
 
-                    <div class="palace-name">
-                        ${escapeHtml(palace.name || "宫")}
-                    </div>
-
                     <div>
-                        ${
-                            palace.isBodyPalace
-                            ? `<span class="tag blue">身</span>`
-                            : ""
-                        }
 
-                        ${
-                            palace.isOriginalPalace
-                            ? `<span class="tag gold">原</span>`
-                            : ""
-                        }
+                        <div class="palace-name">
+                            ${escapeHtml(
+                                palace.name || ""
+                            )}
+                        </div>
+
+                        <div class="palace-branch">
+                            ${escapeHtml(
+                                palace.earthlyBranch || ""
+                            )}
+                        </div>
+
+                    </div>
+
+                    <div class="palace-stem">
+                        ${escapeHtml(
+                            palace.heavenlyStem || ""
+                        )}
                     </div>
 
                 </div>
 
 
-                <div class="branch">
-                    ${escapeHtml(palace.earthlyBranch || "")}
-                    ${
-                        palace.heavenlyStem
-                        ? " · " +
-                          escapeHtml(palace.heavenlyStem)
-                        : ""
-                    }
+                <div class="palace-flags">
+                    ${flags.join("")}
                 </div>
 
 
-                <div class="stars">
-                    ${
-                        starHtml ||
-                        `<span style="color:#999;font-size:11px">
-                            无主要显示星曜
-                         </span>`
-                    }
+                <div class="star-area">
+                    ${majorHtml}
+                </div>
+
+
+                <div
+                    class="star-area"
+                    style="margin-top:5px;"
+                >
+                    ${minorHtml}
+                </div>
+
+
+                <div
+                    class="star-area"
+                    style="margin-top:3px;"
+                >
+                    ${adjectiveHtml}
                 </div>
 
 
                 <div class="palace-bottom">
 
                     <span>
-                        ${
-                            palace.changsheng12
-                            || ""
-                        }
+                        ${escapeHtml(
+                            decadalText
+                        )}
                     </span>
 
                     <span>
-                        ${
-                            palace.decadal
-                            ? "大限"
-                            : ""
-                        }
+                        ${escapeHtml(
+                            changsheng
+                        )}
                     </span>
 
                 </div>
             `;
 
-            container.appendChild(el);
+
+            board.appendChild(el);
+
         }
+    );
+
+
+    highlightSoulThreeHarmonies(
+        chart
     );
 }
 
 
-/* =========================================================
-   选择宫位
-========================================================= */
+function formatDecadal(decadal) {
 
-function selectPalace(index){
+    if (!decadal) {
+        return "";
+    }
 
-    selectedPalaceIndex = index;
 
-    document
-        .querySelectorAll(".palace")
-        .forEach(
-            el => el.classList.remove("selected")
+    if (typeof decadal === "string") {
+        return decadal;
+    }
+
+
+    const start =
+        decadal.startAge !== undefined
+            ? decadal.startAge
+            : "";
+
+
+    const end =
+        decadal.endAge !== undefined
+            ? decadal.endAge
+            : "";
+
+
+    const range =
+        start !== "" && end !== ""
+            ? `${start}-${end}岁`
+            : "";
+
+
+    const palace =
+        decadal.palace
+        ||
+        decadal.name
+        ||
+        "";
+
+
+    return `${range}${palace ? " · " + palace : ""}`;
+}
+
+
+/* ============================================================
+   三方四正高亮
+============================================================ */
+
+function highlightSoulThreeHarmonies(chart) {
+
+    const list =
+        surroundedList(
+            chart,
+            "命宫"
         );
 
-    const target =
-        currentChart.palaces[index];
 
-    const targetEl =
-        [...document.querySelectorAll(".palace")]
-        .find(
+    list.forEach(
+        palace => {
+
+            const elements =
+                document.querySelectorAll(
+                    `.palace[data-palace="${CSS.escape(
+                        palace.name
+                    )}"]`
+                );
+
+
+            elements.forEach(
+                el => {
+
+                    el.classList.add(
+                        "tri-highlight"
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+    const soul =
+        palaceByName(
+            chart,
+            "命宫"
+        );
+
+
+    if (soul) {
+
+        const elements =
+            document.querySelectorAll(
+                `.palace[data-palace="${CSS.escape(
+                    soul.name
+                )}"]`
+            );
+
+
+        elements.forEach(
             el =>
-                el.dataset.branch ===
-                target.earthlyBranch
+                el.classList.add(
+                    "active"
+                )
         );
 
-    if(targetEl){
-        targetEl.classList.add("selected");
-    }
-
-    showPalaceKnowledge(target);
-
-    renderPalaceAnalysis(target);
-}
-
-
-/* =========================================================
-   宫位知识
-========================================================= */
-
-const PALACE_KNOWLEDGE = {
-
-    "命宫":{
-        title:"命宫",
-        text:"传统紫微斗数中用于观察个人整体性格倾向、人生表现方式、行为模式与自我定位的核心宫位。"
-    },
-
-    "兄弟":{
-        title:"兄弟宫",
-        text:"传统上用于观察兄弟姐妹、同辈关系以及部分合作互动主题。"
-    },
-
-    "夫妻":{
-        title:"夫妻宫",
-        text:"传统上用于观察感情、伴侣关系、婚姻互动以及亲密关系模式。"
-    },
-
-    "子女":{
-        title:"子女宫",
-        text:"传统上用于观察子女、晚辈、创造力以及部分人生延续主题。"
-    },
-
-    "财帛":{
-        title:"财帛宫",
-        text:"传统上用于观察财富观念、收入方式、资源管理和金钱使用模式。"
-    },
-
-    "疾厄":{
-        title:"疾厄宫",
-        text:"传统上用于观察身体状态、生活习惯等主题。相关内容仅属于传统文化解释，不应代替医学判断。"
-    },
-
-    "迁移":{
-        title:"迁移宫",
-        text:"传统上用于观察外出、环境变化、社会活动以及离开熟悉环境后的表现。"
-    },
-
-    "仆役":{
-        title:"仆役宫",
-        text:"传统上也常称交友宫，用于观察朋友、同事、合作伙伴和社会关系互动。"
-    },
-
-    "官禄":{
-        title:"官禄宫",
-        text:"传统上用于观察职业、工作方式、事业发展和社会角色。"
-    },
-
-    "田宅":{
-        title:"田宅宫",
-        text:"传统上用于观察居住环境、不动产、家庭空间以及家宅相关主题。"
-    },
-
-    "福德":{
-        title:"福德宫",
-        text:"传统上用于观察精神状态、兴趣享受、内在满足感以及休闲方式。"
-    },
-
-    "父母":{
-        title:"父母宫",
-        text:"传统上用于观察长辈、父母互动、家庭支持以及与权威人物的关系。"
-    }
-};
-
-
-function showPalaceKnowledge(palace){
-
-    const info =
-        PALACE_KNOWLEDGE[palace.name] ||
-        {
-            title:palace.name,
-            text:"当前宫位的基础知识说明。"
-        };
-
-    document.getElementById(
-        "knowledge"
-    ).innerHTML = `
-
-        <div class="analysis-item">
-
-            <h4>
-                ${escapeHtml(info.title)}
-            </h4>
-
-            <p>
-                ${escapeHtml(info.text)}
-            </p>
-
-            <br>
-
-            <div>
-                <span class="tag">
-                    地支：${escapeHtml(palace.earthlyBranch || "-")}
-                </span>
-
-                <span class="tag">
-                    天干：${escapeHtml(palace.heavenlyStem || "-")}
-                </span>
-
-                ${
-                    palace.isBodyPalace
-                    ? `<span class="tag blue">身宫</span>`
-                    : ""
-                }
-
-                ${
-                    palace.isOriginalPalace
-                    ? `<span class="tag gold">来因/原始宫标记</span>`
-                    : ""
-                }
-
-            </div>
-
-        </div>
-    `;
-}
-
-
-/* =========================================================
-   星曜知识
-========================================================= */
-
-const STAR_KNOWLEDGE = {
-
-    "紫微":"传统上常被解释为尊贵、统筹、核心、自我定位等象征。",
-    "天机":"传统上常被解释为思考、变化、谋划、机动等象征。",
-    "太阳":"传统上常被解释为表现、外向、照耀、责任等象征。",
-    "武曲":"传统上常被解释为执行、财务、行动、果断等象征。",
-    "天同":"传统上常被解释为享受、温和、人际、适应等象征。",
-    "廉贞":"传统上常被解释为欲望、规则、人际、选择等象征。",
-    "天府":"传统上常被解释为资源、稳定、管理、储备等象征。",
-    "太阴":"传统上常被解释为内在、细腻、资源、情感等象征。",
-    "贪狼":"传统上常被解释为欲望、社交、兴趣、变化等象征。",
-    "巨门":"传统上常被解释为语言、思辨、表达、争议等象征。",
-    "天相":"传统上常被解释为协调、秩序、辅助、公平等象征。",
-    "天梁":"传统上常被解释为保护、原则、责任、长辈等象征。",
-    "七杀":"传统上常被解释为行动、突破、竞争、变化等象征。",
-    "破军":"传统上常被解释为变化、改革、重新开始等象征。",
-    "文昌":"传统上常被解释为学习、文字、表达、思考。",
-    "文曲":"传统上常被解释为艺术、表达、审美、学习。",
-    "左辅":"传统上常被解释为辅助、合作、人际支持。",
-    "右弼":"传统上常被解释为协助、资源、人际支持。",
-    "禄存":"传统上常被解释为资源、积累、稳定。",
-    "天马":"传统上常被解释为移动、变化、奔波、外部机会。"
-};
-
-
-function showStarKnowledge(name){
-
-    const text =
-        STAR_KNOWLEDGE[name] ||
-        "该星曜的传统文化解释将在后续知识库中继续完善。";
-
-    document.getElementById(
-        "starModalTitle"
-    ).textContent =
-        name;
-
-    document.getElementById(
-        "starModalBody"
-    ).innerHTML = `
-
-        <p style="line-height:1.9;color:#555">
-            ${escapeHtml(text)}
-        </p>
-
-        <div class="geo-status">
-            以上属于传统紫微斗数术语的文化解释，
-            不代表科学验证后的因果关系。
-        </div>
-    `;
-
-    document.getElementById(
-        "starModal"
-    ).classList.add("show");
-}
-
-
-function closeStarModal(){
-
-    document
-        .getElementById("starModal")
-        .classList.remove("show");
-}
-
-
-function closeModal(event){
-
-    if(
-        event.target.id === "starModal"
-    ){
-        closeStarModal();
     }
 }
 
 
-/* =========================================================
-   宫位弹窗备用
-========================================================= */
+/* ============================================================
+   校验信息
+============================================================ */
 
-function closePalaceModal(event){
+function renderVerification(
+    chart,
+    form,
+    adjusted
+) {
 
-    if(
-        !event ||
-        event.target.id === "palaceModal"
-    ){
-        document
-            .getElementById("palaceModal")
-            .classList.remove("show");
-    }
-}
-
-
-/* =========================================================
-   单宫解析
-========================================================= */
-
-function renderPalaceAnalysis(palace){
-
-    const stars =
-        [
-            ...(palace.majorStars || []),
-            ...(palace.minorStars || [])
-        ];
-
-    const names =
-        stars
-        .map(s=>s.name)
-        .filter(Boolean);
-
-    let text = "";
-
-    if(palace.name === "命宫"){
-
-        text =
-            "这里是命宫，是传统紫微斗数中观察个人整体表现方式的重要位置。可以结合命宫主星、三方四正以及四化一起理解，而不宜只看单颗星。";
-
-    }else if(palace.name === "官禄"){
-
-        text =
-            "官禄宫传统上用于观察事业、职业角色和工作模式。实际解读应结合命宫、财帛宫、迁移宫以及相关四化。";
-
-    }else if(palace.name === "财帛"){
-
-        text =
-            "财帛宫传统上用于观察财富观、资源管理以及获取收入的方式。单看财帛宫不能直接等同于现实财富结果。";
-
-    }else if(palace.name === "夫妻"){
-
-        text =
-            "夫妻宫传统上用于观察亲密关系、伴侣互动和婚姻主题。关系判断需要结合多个宫位与现实中的沟通方式。";
-
-    }else{
-
-        text =
-            `${palace.name}宫的传统文化主题可以结合该宫的主星、辅星、四化以及三方四正进行综合观察。`;
-    }
-
-    if(names.length){
-
-        text +=
-            ` 当前宫位主要显示星曜包括：${names.join("、")}。`;
-    }
-
-    const analysis =
-        document.getElementById("analysis");
-
-    const existing =
-        analysis.querySelector(
-            `.analysis-item[data-palace="${CSS.escape(palace.name)}"]`
+    const soul =
+        palaceByName(
+            chart,
+            "命宫"
         );
 
-    if(existing){
-        return;
-    }
 
-    const item =
-        document.createElement("div");
+    const body =
+        (() => {
 
-    item.className = "analysis-item";
+            try {
 
-    item.dataset.palace =
-        palace.name;
+                return chart.palaces.find(
+                    p => p.isBodyPalace
+                );
 
-    item.innerHTML = `
+            } catch (e) {
 
-        <h4>
-            ${escapeHtml(palace.name)}
-        </h4>
+                return null;
+            }
 
-        <p>
-            ${escapeHtml(text)}
-        </p>
-
-    `;
-
-    analysis.appendChild(item);
-}
+        })();
 
 
-/* =========================================================
-   总体解析
-========================================================= */
-
-function renderAnalysis(){
-
-    const container =
-        document.getElementById("analysis");
-
-    container.innerHTML = "";
-
-    currentChart.palaces.forEach(
-        palace => {
-
-            renderPalaceAnalysis(
-                palace
-            );
-        }
-    );
-}
+    const rows = [];
 
 
-/* =========================================================
-   四化
-========================================================= */
-
-function renderMutagen(){
-
-    const container =
-        document.getElementById("mutagenInfo");
-
-    const result = {
-        "禄":[],
-        "权":[],
-        "科":[],
-        "忌":[]
-    };
-
-    currentChart.palaces.forEach(
-        palace => {
-
-            const stars =
-                [
-                    ...(palace.majorStars || []),
-                    ...(palace.minorStars || []),
-                    ...(palace.adjectiveStars || [])
-                ];
-
-            stars.forEach(
-                star => {
-
-                    if(
-                        star.mutagen &&
-                        result[star.mutagen]
-                    ){
-
-                        result[
-                            star.mutagen
-                        ].push(
-                            `${palace.name} · ${star.name}`
-                        );
-                    }
-                }
-            );
-        }
-    );
-
-    container.innerHTML = `
-
-        <div class="table-wrap">
-
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>四化</th>
-                        <th>相关星曜</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    <tr>
-                        <td>
-                            <span class="tag green">禄</span>
-                        </td>
-                        <td>
-                            ${
-                                result["禄"].length
-                                ? result["禄"].join("、")
-                                : "当前未显示"
-                            }
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <span class="tag blue">权</span>
-                        </td>
-                        <td>
-                            ${
-                                result["权"].length
-                                ? result["权"].join("、")
-                                : "当前未显示"
-                            }
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <span class="tag gold">科</span>
-                        </td>
-                        <td>
-                            ${
-                                result["科"].length
-                                ? result["科"].join("、")
-                                : "当前未显示"
-                            }
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <span class="tag red">忌</span>
-                        </td>
-                        <td>
-                            ${
-                                result["忌"].length
-                                ? result["忌"].join("、")
-                                : "当前未显示"
-                            }
-                        </td>
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-    `;
-}
+    rows.push([
+        "历法",
+        form.calendar === "solar"
+            ? "公历"
+            : "农历"
+    ]);
 
 
-/* =========================================================
-   基础格局检测
-========================================================= */
-
-function renderPatterns(){
-
-    const container =
-        document.getElementById("patterns");
-
-    const ming =
-        currentChart.palaces.find(
-            p=>p.name==="命宫"
-        );
-
-    if(!ming){
-
-        container.innerHTML =
-            "未找到命宫。";
-
-        return;
-    }
-
-    const allStars =
-        currentChart.palaces.flatMap(
-            p => [
-                ...(p.majorStars || []),
-                ...(p.minorStars || [])
-            ]
-        );
-
-    const names =
-        allStars
-        .map(s=>s.name);
-
-    const patterns = [];
+    rows.push([
+        "出生日期",
+        `${form.year}-${form.month}-${form.day}`
+    ]);
 
 
-    if(names.includes("紫微")){
-        patterns.push(
-            "命盘中出现紫微星：传统解释通常重视统筹、核心、自我定位等主题。"
-        );
-    }
-
-    if(names.includes("七杀")){
-        patterns.push(
-            "命盘中出现七杀：传统解释常涉及行动、竞争、突破、变化等主题。"
-        );
-    }
-
-    if(names.includes("破军")){
-        patterns.push(
-            "命盘中出现破军：传统解释常涉及改革、变化、重新开始等主题。"
-        );
-    }
-
-    if(names.includes("贪狼")){
-        patterns.push(
-            "命盘中出现贪狼：传统解释常涉及兴趣、社交、欲望和变化等主题。"
-        );
-    }
-
-    if(names.includes("文昌")){
-        patterns.push(
-            "命盘中出现文昌：传统解释常关注学习、文字、表达等主题。"
-        );
-    }
-
-    if(names.includes("文曲")){
-        patterns.push(
-            "命盘中出现文曲：传统解释常关注表达、审美、艺术与学习等主题。"
-        );
-    }
-
-    if(!patterns.length){
-
-        patterns.push(
-            "当前版本没有根据简单规则识别到特别提示。完整格局判断需要结合主星组合、三方四正、四化、庙旺落陷以及流限综合分析。"
-        );
-    }
+    rows.push([
+        "出生时间",
+        `${String(form.hour).padStart(2,"0")}:${String(form.minute).padStart(2,"0")}`
+    ]);
 
 
-    container.innerHTML =
-        patterns.map(
-            p=>`
-                <div class="analysis-item">
-                    <p>${escapeHtml(p)}</p>
-                </div>
+    rows.push([
+        "出生地",
+        form.place
+    ]);
+
+
+    rows.push([
+        "经纬度",
+        `${form.longitude} / ${form.latitude}`
+    ]);
+
+
+    rows.push([
+        "时区",
+        `UTC${form.timezone >= 0 ? "+" : ""}${form.timezone}`
+    ]);
+
+
+    rows.push([
+        "真太阳时",
+        adjusted.usedTrueSolar
+            ? `已使用，修正 ${adjusted.correctionMinutes.toFixed(2)} 分钟`
+            : "未使用"
+    ]);
+
+
+    rows.push([
+        "实际排盘时辰",
+        `${timeIndexName(adjusted.timeIndex)}时`
+    ]);
+
+
+    rows.push([
+        "算法",
+        form.school === "zhongzhou"
+            ? `中州派 / ${form.astroType}`
+            : "通行本（三合体系）"
+    ]);
+
+
+    rows.push([
+        "命宫",
+        soul
+            ? `${soul.name} · ${soul.earthlyBranch}`
+            : "—"
+    ]);
+
+
+    rows.push([
+        "身宫",
+        body
+            ? `${body.name} · ${body.earthlyBranch}`
+            : "—"
+    ]);
+
+
+    rows.push([
+        "命宫三方四正",
+        joinChinese(
+            surroundedList(
+                chart,
+                "命宫"
+            ).map(
+                p =>
+                    `${p.name}(${p.earthlyBranch})`
+            )
+        )
+    ]);
+
+
+    $("verificationTable").innerHTML =
+        rows.map(
+            row => `
+                <tr>
+                    <th>${escapeHtml(row[0])}</th>
+                    <td>${escapeHtml(row[1])}</td>
+                </tr>
             `
         ).join("");
 }
 
 
-/* =========================================================
-   保存命盘
-========================================================= */
+/* ============================================================
+   十二宫明细
+============================================================ */
 
-function saveCurrentChart(){
+function renderDetailTable(chart) {
 
-    if(!currentChart){
+    const palaces =
+        chart.palaces || [];
 
-        alert("请先完成排盘。");
 
-        return;
-    }
+    $("detailTable").innerHTML =
+        palaces.map(
+            palace => {
 
-    const saved =
-        JSON.parse(
-            localStorage.getItem(
-                "ziwei_saved_charts"
-            ) || "[]"
-        );
+                const majors =
+                    majorNames(palace);
 
-    const item = {
 
-        id:
-            Date.now(),
+                const minors =
+                    minorNames(palace);
 
-        name:
-            currentForm.birthPlace ||
-            "未命名命盘",
 
-        created:
-            new Date().toLocaleString(),
+                const adjectives =
+                    adjectiveNames(palace);
 
-        form:
-            {...currentForm}
+
+                const mutagens =
+                    palaceStars(palace)
+                        .filter(
+                            s =>
+                                s &&
+                                s.mutagen
+                        )
+                        .map(
+                            s =>
+                                `${s.name}化${s.mutagen}`
+                        );
+
+
+                return `
+                    <tr>
+
+                        <td>
+                            ${escapeHtml(
+                                palace.name || ""
+                            )}
+                            ${
+                                palace.isBodyPalace
+                                    ? " · 身宫"
+                                    : ""
+                            }
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                palace.earthlyBranch || ""
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                palace.heavenlyStem || ""
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                joinChinese(
+                                    majors
+                                )
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                joinChinese(
+                                    minors
+                                )
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                joinChinese(
+                                    adjectives
+                                )
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                joinChinese(
+                                    mutagens
+                                )
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                formatDecadal(
+                                    palace.decadal
+                                )
+                            )}
+                        </td>
+
+                    </tr>
+                `;
+            }
+        ).join("");
+}
+
+
+/* ============================================================
+   四化表
+============================================================ */
+
+function renderMutagenTable(chart) {
+
+    const rows = [];
+
+
+    const map = {
+        "禄": [],
+        "权": [],
+        "科": [],
+        "忌": []
     };
 
-    saved.unshift(item);
 
-    localStorage.setItem(
-        "ziwei_saved_charts",
-        JSON.stringify(
-            saved.slice(0,30)
+    (chart.palaces || [])
+        .forEach(
+            palace => {
+
+                palaceStars(palace)
+                    .forEach(
+                        star => {
+
+                            if (
+                                star &&
+                                map.hasOwnProperty(
+                                    star.mutagen
+                                )
+                            ) {
+
+                                map[
+                                    star.mutagen
+                                ].push({
+                                    star:
+                                        star.name,
+                                    palace:
+                                        palace.name,
+                                    branch:
+                                        palace.earthlyBranch
+                                });
+
+                            }
+
+                        }
+                    );
+
+            }
+        );
+
+
+    ["禄","权","科","忌"]
+        .forEach(
+            mutagen => {
+
+                const entries =
+                    map[mutagen];
+
+
+                if (!entries.length) {
+
+                    rows.push(`
+                        <tr>
+                            <td>${mutagen}</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>当前算法未取得对应四化信息</td>
+                        </tr>
+                    `);
+
+                    return;
+                }
+
+
+                entries.forEach(
+                    item => {
+
+                        rows.push(`
+                            <tr>
+
+                                <td>
+                                    ${mutagen}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        item.star
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        item.palace
+                                    )}
+                                    ·
+                                    ${escapeHtml(
+                                        item.branch
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        mutagenText(
+                                            mutagen
+                                        )
+                                    )}
+                                </td>
+
+                            </tr>
+                        `);
+
+                    }
+                );
+
+            }
+        );
+
+
+    $("mutagenTable").innerHTML =
+        rows.join("");
+}
+
+
+function mutagenText(mutagen) {
+
+    const map = {
+
+        "禄":
+            "传统体系中通常从资源、顺势、获得与现实收益的角度观察。",
+
+        "权":
+            "传统体系中通常从行动力、掌控、责任、推动事情发展的角度观察。",
+
+        "科":
+            "传统体系中通常从表达、名声、专业性、学习与被看见的角度观察。",
+
+        "忌":
+            "传统体系中通常从压力、执着、反复、盲点与需要处理的议题角度观察。"
+    };
+
+
+    return map[mutagen] || "";
+}
+
+
+/* ============================================================
+   大白话解析
+============================================================ */
+
+function buildAnalysis(
+    chart,
+    form
+) {
+
+    const soul =
+        palaceByName(
+            chart,
+            "命宫"
+        );
+
+
+    const body =
+        (() => {
+
+            try {
+
+                return chart.palaces.find(
+                    p =>
+                        p.isBodyPalace
+                );
+
+            } catch (e) {
+
+                return null;
+            }
+
+        })();
+
+
+    const sections = [];
+
+
+    sections.push(
+        analyzeSoul(
+            chart,
+            soul,
+            body
         )
     );
 
-    renderSavedList();
 
-    alert("命盘已保存在当前浏览器。");
-}
-
-
-function renderSavedList(){
-
-    const container =
-        document.getElementById(
-            "savedList"
-        );
-
-    const saved =
-        JSON.parse(
-            localStorage.getItem(
-                "ziwei_saved_charts"
-            ) || "[]"
-        );
-
-    if(!saved.length){
-
-        container.innerHTML =
-            `<div class="geo-status">
-                当前浏览器还没有保存的命盘。
-             </div>`;
-
-        return;
-    }
-
-
-    container.innerHTML =
-        saved.map(
-            item => `
-
-                <div class="saved-item">
-
-                    <div class="saved-info">
-
-                        <div class="saved-name">
-                            ${escapeHtml(item.name)}
-                        </div>
-
-                        <div class="saved-date">
-                            ${escapeHtml(item.created)}
-                        </div>
-
-                    </div>
-
-                    <div class="saved-actions">
-
-                        <button
-                            class="small-btn"
-                            onclick="loadSaved(${item.id})"
-                        >
-                            加载
-                        </button>
-
-                        <button
-                            class="small-btn"
-                            onclick="deleteSaved(${item.id})"
-                        >
-                            删除
-                        </button>
-
-                    </div>
-
-                </div>
-            `
-        ).join("");
-}
-
-
-function loadSaved(id){
-
-    const saved =
-        JSON.parse(
-            localStorage.getItem(
-                "ziwei_saved_charts"
-            ) || "[]"
-        );
-
-    const item =
-        saved.find(
-            x=>x.id === id
-        );
-
-    if(!item){
-        return;
-    }
-
-    currentForm =
-        {...item.form};
-
-    document.getElementById(
-        "birthPlace"
-    ).value =
-        currentForm.birthPlace || "";
-
-    document.getElementById(
-        "longitude"
-    ).value =
-        currentForm.longitude || "";
-
-    document.getElementById(
-        "latitude"
-    ).value =
-        currentForm.latitude || "";
-
-    document.getElementById(
-        "birthTime"
-    ).value =
-        currentForm.time || "";
-
-    document.getElementById(
-        "gender"
-    ).value =
-        currentForm.gender || "";
-
-    document.getElementById(
-        "timezone"
-    ).value =
-        currentForm.timezone ?? 8;
-
-    document.getElementById(
-        "trueSolar"
-    ).checked =
-        !!currentForm.trueSolar;
-
-    document.getElementById(
-        "school"
-    ).value =
-        currentForm.school || "default";
-
-    document.getElementById(
-        "zhongzhouType"
-    ).value =
-        currentForm.zhongzhouType || "heaven";
-
-
-    if(currentForm.calendar === "lunar"){
-
-        setCalendar("lunar");
-
-        document.getElementById(
-            "lunarDate"
-        ).value =
-            currentForm.dateStr || "";
-
-    }else{
-
-        setCalendar("solar");
-
-        document.getElementById(
-            "birthDate"
-        ).value =
-            currentForm.dateStr || "";
-    }
-
-    generateChart();
-}
-
-
-function deleteSaved(id){
-
-    let saved =
-        JSON.parse(
-            localStorage.getItem(
-                "ziwei_saved_charts"
-            ) || "[]"
-        );
-
-    saved =
-        saved.filter(
-            x=>x.id !== id
-        );
-
-    localStorage.setItem(
-        "ziwei_saved_charts",
-        JSON.stringify(saved)
+    sections.push(
+        analyzeCareer(
+            chart
+        )
     );
 
-    renderSavedList();
+
+    sections.push(
+        analyzeWealth(
+            chart
+        )
+    );
+
+
+    sections.push(
+        analyzeRelationship(
+            chart
+        )
+    );
+
+
+    sections.push(
+        analyzeSocial(
+            chart
+        )
+    );
+
+
+    sections.push(
+        analyzeFamily(
+            chart
+        )
+    );
+
+
+    sections.push(
+        analyzeMigration(
+            chart
+        )
+    );
+
+
+    sections.push(
+        analyzeCurrentPeriod(
+            chart,
+            form
+        )
+    );
+
+
+    return sections.filter(Boolean);
 }
 
 
-/* =========================================================
-   PNG 导出
-========================================================= */
+/* ============================================================
+   分析辅助
+============================================================ */
 
-async function exportPNG(){
+function getPalaceSummary(
+    chart,
+    palaceName
+) {
 
-    if(!currentChart){
+    const palace =
+        palaceByName(
+            chart,
+            palaceName
+        );
 
-        alert("请先完成排盘。");
+
+    if (!palace) {
+        return null;
+    }
+
+
+    const surrounding =
+        getSurrounded(
+            chart,
+            palaceName
+        );
+
+
+    const allSur =
+        surrounding
+            ? [
+                surrounding.target,
+                surrounding.opposite,
+                surrounding.wealth,
+                surrounding.career
+              ].filter(Boolean)
+            : [];
+
+
+    const stars =
+        allStarNames(
+            palace
+        );
+
+
+    const triStars =
+        unique(
+            allSur.flatMap(
+                p =>
+                    allStarNames(p)
+            )
+        );
+
+
+    const mutagens =
+        unique(
+            palaceStars(
+                palace
+            )
+            .filter(
+                s =>
+                    s &&
+                    s.mutagen
+            )
+            .map(
+                s =>
+                    `${s.name}化${s.mutagen}`
+            )
+        );
+
+
+    return {
+        palace,
+        surrounding,
+        stars,
+        triStars,
+        mutagens,
+        opposite:
+            surrounding
+                ? surrounding.opposite
+                : null,
+        wealth:
+            surrounding
+                ? surrounding.wealth
+                : null,
+        career:
+            surrounding
+                ? surrounding.career
+                : null
+    };
+}
+
+
+function traitsForStars(
+    stars
+) {
+
+    return stars
+        .map(
+            star =>
+                STAR_TRAITS[star]
+        )
+        .filter(Boolean);
+}
+
+
+function buildEvidence(
+    summary,
+    extra
+) {
+
+    const items = [];
+
+
+    if (summary && summary.palace) {
+
+        items.push(
+            `${summary.palace.name}：${joinChinese(
+                majorNames(
+                    summary.palace
+                )
+            )}`
+        );
+
+
+        if (
+            minorNames(
+                summary.palace
+            ).length
+        ) {
+
+            items.push(
+                `辅星：${joinChinese(
+                    minorNames(
+                        summary.palace
+                    )
+                )}`
+            );
+
+        }
+
+    }
+
+
+    if (
+        summary &&
+        summary.surrounding
+    ) {
+
+        const p =
+            summary.surrounding;
+
+
+        items.push(
+            `三方四正：${joinChinese([
+                p.target
+                    ? p.target.name
+                    : "",
+                p.opposite
+                    ? p.opposite.name
+                    : "",
+                p.wealth
+                    ? p.wealth.name
+                    : "",
+                p.career
+                    ? p.career.name
+                    : ""
+            ])}`
+        );
+
+    }
+
+
+    if (
+        summary &&
+        summary.mutagens.length
+    ) {
+
+        items.push(
+            `本宫四化：${joinChinese(
+                summary.mutagens
+            )}`
+        );
+
+    }
+
+
+    if (extra) {
+
+        items.push(
+            extra
+        );
+
+    }
+
+
+    return items;
+}
+
+
+function makeAnalysisCard(
+    title,
+    badge,
+    text,
+    evidence
+) {
+
+    return {
+        title,
+        badge,
+        text,
+        evidence
+    };
+}
+
+
+/* ============================================================
+   命宫
+============================================================ */
+
+function analyzeSoul(
+    chart,
+    soul,
+    body
+) {
+
+    if (!soul) {
+        return null;
+    }
+
+
+    const summary =
+        getPalaceSummary(
+            chart,
+            "命宫"
+        );
+
+
+    const major =
+        majorNames(
+            soul
+        );
+
+
+    const traits =
+        traitsForStars(
+            major
+        );
+
+
+    let text = "";
+
+
+    if (major.length) {
+
+        text +=
+            `命宫落在${soul.earthlyBranch || ""}，本宫主星为${joinChinese(major)}。`;
+
+        if (traits.length) {
+
+            text +=
+                `从传统紫微斗数的象征体系来看，这组星曜更容易把人的关注点放在${joinChinese(traits.slice(0,3))}。`;
+
+        }
+
+    } else {
+
+        text +=
+            `命宫落在${soul.earthlyBranch || ""}，本宫没有十四主星直接坐守，因此不能只看命宫本身，需要明显加强三方四正的判断。`;
+
+    }
+
+
+    const tri =
+        summary
+            ? summary.triStars
+            : [];
+
+
+    const triMajor =
+        tri.filter(
+            star =>
+                STAR_TRAITS[star]
+        );
+
+
+    if (triMajor.length) {
+
+        text +=
+            `真正需要一起看的不是命宫一个格子，而是它的三方四正；其中还出现${joinChinese(triMajor.slice(0,6))}，所以你的性格与做事方式不能简单用命宫单颗星概括。`;
+
+    }
+
+
+    if (body) {
+
+        text +=
+            `另外，身宫落在${body.name || ""}，传统上常把它作为后天实际行动方式的辅助观察点；因此可以把“内在倾向”和“实际投入的生活领域”分开看。`;
+
+    }
+
+
+    return makeAnalysisCard(
+        "性格与人生主轴",
+        "命宫 + 三方四正 + 身宫",
+        text,
+        buildEvidence(
+            summary,
+            body
+                ? `身宫：${body.name} · ${body.earthlyBranch}`
+                : ""
+        )
+    );
+}
+
+
+/* ============================================================
+   事业
+============================================================ */
+
+function analyzeCareer(chart) {
+
+    const summary =
+        getPalaceSummary(
+            chart,
+            "官禄宫"
+        );
+
+
+    if (!summary) {
+        return null;
+    }
+
+
+    const p =
+        summary.palace;
+
+
+    const majors =
+        majorNames(p);
+
+
+    const traits =
+        traitsForStars(
+            majors
+        );
+
+
+    const tri =
+        summary.triStars;
+
+
+    let text =
+        `事业主要看官禄宫，但这里不单独看官禄宫。当前官禄宫在${p.earthlyBranch || ""}，本宫主星为${joinChinese(majors)}。`;
+
+
+    if (traits.length) {
+
+        text +=
+            `这些星曜在传统体系里对应${joinChinese(traits.slice(0,3))}，所以工作方式更适合从“做什么事情、承担什么角色”来理解，而不是简单归类成某一种职业。`;
+
+    }
+
+
+    const useful =
+        tri.filter(
+            star =>
+                [
+                    "紫微",
+                    "天机",
+                    "太阳",
+                    "武曲",
+                    "天府",
+                    "天相",
+                    "天梁",
+                    "七杀",
+                    "破军",
+                    "贪狼",
+                    "文昌",
+                    "文曲",
+                    "左辅",
+                    "右弼"
+                ].includes(star)
+        );
+
+
+    if (useful.length) {
+
+        text +=
+            `三方四正又出现${joinChinese(useful.slice(0,7))}，这说明事业判断不能只落在“稳定/不稳定”两个选项上，而更应该观察你的资源整合、专业表达、执行、管理或变化能力如何组合。`;
+
+    }
+
+
+    if (
+        hasAny(
+            p,
+            [
+                "擎羊",
+                "陀罗",
+                "火星",
+                "铃星",
+                "鈴星",
+                "地空",
+                "地劫"
+            ]
+        )
+    ) {
+
+        text +=
+            `同时官禄宫本身带有煞曜或空劫信息，传统解读通常会把它理解为工作过程中的压力、变化、反复或结构调整，需要注意“过程成本”，而不是直接理解成事业结果不好。`;
+
+    }
+
+
+    return makeAnalysisCard(
+        "事业与工作方式",
+        "官禄宫 + 命宫三方四正",
+        text,
+        buildEvidence(
+            summary,
+            `三方四正星曜：${joinChinese(
+                tri.slice(0,10)
+            )}`
+        )
+    );
+}
+
+
+/* ============================================================
+   财运
+============================================================ */
+
+function analyzeWealth(chart) {
+
+    const summary =
+        getPalaceSummary(
+            chart,
+            "财帛宫"
+        );
+
+
+    if (!summary) {
+        return null;
+    }
+
+
+    const p =
+        summary.palace;
+
+
+    const majors =
+        majorNames(p);
+
+
+    const traits =
+        traitsForStars(
+            majors
+        );
+
+
+    let text =
+        `财帛宫落在${p.earthlyBranch || ""}，本宫主星为${joinChinese(majors)}。`;
+
+
+    if (traits.length) {
+
+        text +=
+            `传统体系里，这组星曜更容易从${joinChinese(traits.slice(0,3))}的角度观察赚钱与资源管理方式。`;
+
+    }
+
+
+    const tri =
+        summary.triStars;
+
+
+    const moneyStars =
+        tri.filter(
+            star =>
+                [
+                    "武曲",
+                    "天府",
+                    "太阴",
+                    "紫微",
+                    "天相",
+                    "禄存",
+                    "贪狼",
+                    "天机",
+                    "太阳"
+                ].includes(star)
+        );
+
+
+    if (moneyStars.length) {
+
+        text +=
+            `财帛宫的三方四正还出现${joinChinese(moneyStars)}，因此更值得观察“收入来源、资源积累、工作能力和机会”之间的连接，而不是只看单一财星。`;
+
+    }
+
+
+    if (
+        summary.mutagens.some(
+            x =>
+                x.includes("化禄")
+        )
+    ) {
+
+        text +=
+            `本宫又直接出现化禄信息，按照传统四化体系，可以把它作为资源与收益议题的重点观察点。`;
+
+    }
+
+
+    if (
+        summary.mutagens.some(
+            x =>
+                x.includes("化忌")
+        )
+    ) {
+
+        text +=
+            `同时本宫出现化忌信息，传统上通常提醒这里容易出现“特别在意、反复投入或需要管理”的部分，所以更适合把它理解成资源管理课题，而不是简单定义为破财。`;
+
+    }
+
+
+    return makeAnalysisCard(
+        "财运与资源",
+        "财帛宫 + 三方四正 + 四化",
+        text,
+        buildEvidence(
+            summary,
+            `三方四正重点：${joinChinese(
+                moneyStars
+            )}`
+        )
+    );
+}
+
+
+/* ============================================================
+   感情
+============================================================ */
+
+function analyzeRelationship(chart) {
+
+    const summary =
+        getPalaceSummary(
+            chart,
+            "夫妻宫"
+        );
+
+
+    if (!summary) {
+        return null;
+    }
+
+
+    const p =
+        summary.palace;
+
+
+    const majors =
+        majorNames(p);
+
+
+    const traits =
+        traitsForStars(
+            majors
+        );
+
+
+    let text =
+        `夫妻宫在${p.earthlyBranch || ""}，本宫主星为${joinChinese(majors)}。`;
+
+
+    if (traits.length) {
+
+        text +=
+            `从传统象征角度，这组星曜更容易把关系中的重点放在${joinChinese(traits.slice(0,3))}。`;
+
+    }
+
+
+    if (summary.opposite) {
+
+        text +=
+            `夫妻宫的对宫是${summary.opposite.name}，其星曜为${joinChinese(
+                majorNames(
+                    summary.opposite
+                )
+            )}。传统三方四正体系不会把感情只解释成“夫妻宫好不好”，而会同时看对宫以及命宫、福德等相关结构。`;
+
+    }
+
+
+    const tri =
+        summary.triStars;
+
+
+    const relationshipStars =
+        tri.filter(
+            star =>
+                [
+                    "紫微",
+                    "天府",
+                    "天相",
+                    "太阳",
+                    "太阴",
+                    "天同",
+                    "贪狼",
+                    "廉贞",
+                    "巨门",
+                    "七杀",
+                    "破军",
+                    "文昌",
+                    "文曲",
+                    "左辅",
+                    "右弼"
+                ].includes(star)
+        );
+
+
+    if (relationshipStars.length) {
+
+        text +=
+            `三方四正中还出现${joinChinese(relationshipStars.slice(0,8))}，因此关系议题更应该结合你的表达方式、现实条件、个人需求与相处模式一起观察。`;
+
+    }
+
+
+    return makeAnalysisCard(
+        "感情与亲密关系",
+        "夫妻宫 + 命宫三方四正",
+        text,
+        buildEvidence(
+            summary,
+            `关系相关星曜：${joinChinese(
+                relationshipStars
+            )}`
+        )
+    );
+}
+
+
+/* ============================================================
+   人际
+============================================================ */
+
+function analyzeSocial(chart) {
+
+    const summary =
+        getPalaceSummary(
+            chart,
+            "仆役宫"
+        );
+
+
+    if (!summary) {
+        return null;
+    }
+
+
+    const p =
+        summary.palace;
+
+
+    const majors =
+        majorNames(p);
+
+
+    let text =
+        `仆役宫（交友宫）在${p.earthlyBranch || ""}，本宫主星为${joinChinese(majors)}。`;
+
+
+    const traits =
+        traitsForStars(
+            majors
+        );
+
+
+    if (traits.length) {
+
+        text +=
+            `这组星曜传统上可以从${joinChinese(traits.slice(0,3))}观察合作、人际与社交互动。`;
+
+    }
+
+
+    const tri =
+        summary.triStars;
+
+
+    const supportStars =
+        tri.filter(
+            star =>
+                [
+                    "左辅",
+                    "右弼",
+                    "天魁",
+                    "天钺",
+                    "紫微",
+                    "天府",
+                    "天相",
+                    "太阳",
+                    "文昌",
+                    "文曲"
+                ].includes(star)
+        );
+
+
+    if (supportStars.length) {
+
+        text +=
+            `三方四正出现${joinChinese(supportStars)}，传统体系会倾向从支持系统、合作关系、专业资源或人际协同的角度继续观察。`;
+
+    }
+
+
+    return makeAnalysisCard(
+        "人际与合作",
+        "仆役宫 + 三方四正",
+        text,
+        buildEvidence(
+            summary,
+            `支持型星曜：${joinChinese(
+                supportStars
+            )}`
+        )
+    );
+}
+
+
+/* ============================================================
+   家庭
+============================================================ */
+
+function analyzeFamily(chart) {
+
+    const parent =
+        getPalaceSummary(
+            chart,
+            "父母宫"
+        );
+
+
+    const property =
+        getPalaceSummary(
+            chart,
+            "田宅宫"
+        );
+
+
+    if (!parent) {
+        return null;
+    }
+
+
+    const p =
+        parent.palace;
+
+
+    const majors =
+        majorNames(p);
+
+
+    let text =
+        `父母宫在${p.earthlyBranch || ""}，本宫主星为${joinChinese(majors)}。`;
+
+
+    const traits =
+        traitsForStars(
+            majors
+        );
+
+
+    if (traits.length) {
+
+        text +=
+            `传统上可以从${joinChinese(traits.slice(0,3))}理解与长辈、家庭规则或成长环境有关的主题。`;
+
+    }
+
+
+    if (property) {
+
+        text +=
+            `如果要继续看家庭与居住稳定度，还要把田宅宫一起纳入。当前田宅宫在${property.palace.earthlyBranch || ""}，主星为${joinChinese(
+                majorNames(
+                    property.palace
+                )
+            )}，因此家庭议题并不能只从父母宫单独下结论。`;
+
+    }
+
+
+    return makeAnalysisCard(
+        "家庭与成长环境",
+        "父母宫 + 田宅宫",
+        text,
+        [
+            ...buildEvidence(
+                parent
+            ),
+            property
+                ? `田宅宫：${joinChinese(
+                    majorNames(
+                        property.palace
+                    )
+                )}`
+                : ""
+        ]
+    );
+}
+
+
+/* ============================================================
+   迁移
+============================================================ */
+
+function analyzeMigration(chart) {
+
+    const summary =
+        getPalaceSummary(
+            chart,
+            "迁移宫"
+        );
+
+
+    if (!summary) {
+        return null;
+    }
+
+
+    const p =
+        summary.palace;
+
+
+    const majors =
+        majorNames(p);
+
+
+    const traits =
+        traitsForStars(
+            majors
+        );
+
+
+    let text =
+        `迁移宫在${p.earthlyBranch || ""}，本宫主星为${joinChinese(majors)}。`;
+
+
+    if (traits.length) {
+
+        text +=
+            `传统上可以从${joinChinese(traits.slice(0,3))}观察外部环境、出门状态以及面对陌生环境时的表现。`;
+
+    }
+
+
+    if (
+        hasAny(
+            p,
+            [
+                "天马",
+                "贪狼",
+                "破军",
+                "七杀",
+                "天机"
+            ]
+        )
+    ) {
+
+        text +=
+            `本宫本身出现与变化、流动或行动相关的星曜，因此在传统解释中会比较强调环境变化与主动调整。`;
+
+    }
+
+
+    if (
+        hasAny(
+            p,
+            [
+                "擎羊",
+                "陀罗",
+                "火星",
+                "铃星",
+                "鈴星",
+                "地空",
+                "地劫"
+            ]
+        )
+    ) {
+
+        text +=
+            `同时存在需要注意的煞曜/空劫信息，传统上会提醒在环境变化、移动或陌生场景中留意过程成本与突发性。`;
+
+    }
+
+
+    return makeAnalysisCard(
+        "环境、迁移与外部发展",
+        "迁移宫 + 对宫",
+        text,
+        buildEvidence(
+            summary
+        )
+    );
+}
+
+
+/* ============================================================
+   当前阶段
+============================================================ */
+
+function analyzeCurrentPeriod(
+    chart,
+    form
+) {
+
+    let horoscope = null;
+
+
+    try {
+
+        horoscope =
+            chart.horoscope(
+                String(
+                    form.analysisYear
+                ) + "-10-01",
+                2
+            );
+
+    } catch (e) {}
+
+
+    const soul =
+        palaceByName(
+            chart,
+            "命宫"
+        );
+
+
+    const career =
+        palaceByName(
+            chart,
+            "官禄宫"
+        );
+
+
+    const wealth =
+        palaceByName(
+            chart,
+            "财帛宫"
+        );
+
+
+    let text =
+        `当前分析年份设为${form.analysisYear}年。`;
+
+
+    if (horoscope) {
+
+        try {
+
+            const yearSoul =
+                horoscope.palace(
+                    "命宫",
+                    "yearly"
+                );
+
+
+            const yearCareer =
+                horoscope.palace(
+                    "官禄宫",
+                    "yearly"
+                );
+
+
+            const yearWealth =
+                horoscope.palace(
+                    "财帛宫",
+                    "yearly"
+                );
+
+
+            if (yearSoul) {
+
+                text +=
+                    `流年命宫落在${yearSoul.earthlyBranch || ""}，流年命宫本身的运限信息可以作为这一年的总入口。`;
+
+            }
+
+
+            if (yearCareer) {
+
+                text +=
+                    `事业层面，流年官禄宫落在${yearCareer.earthlyBranch || ""}。`;
+
+            }
+
+
+            if (yearWealth) {
+
+                text +=
+                    `财务层面，流年财帛宫落在${yearWealth.earthlyBranch || ""}。`;
+
+            }
+
+        } catch (e) {
+
+            text +=
+                "当前版本已生成本命结构；流年接口未能取得完整的运限对象，因此这里不虚构具体流年星曜。";
+        }
+
+    } else {
+
+        text +=
+            "当前版本可以稳定完成原局排盘；如果运限数据没有返回，就不会编造具体流年星曜。";
+
+    }
+
+
+    const evidence = [];
+
+
+    if (soul) {
+
+        evidence.push(
+            `本命命宫：${soul.name} · ${soul.earthlyBranch}`
+        );
+
+    }
+
+
+    if (career) {
+
+        evidence.push(
+            `本命官禄：${career.name} · ${career.earthlyBranch}`
+        );
+
+    }
+
+
+    if (wealth) {
+
+        evidence.push(
+            `本命财帛：${wealth.name} · ${wealth.earthlyBranch}`
+        );
+
+    }
+
+
+    return makeAnalysisCard(
+        `当前阶段：${form.analysisYear}`,
+        "本命 + 流年",
+        text,
+        evidence
+    );
+}
+
+
+/* ============================================================
+   渲染分析
+============================================================ */
+
+function renderAnalysis(
+    chart,
+    form
+) {
+
+    const sections =
+        buildAnalysis(
+            chart,
+            form
+        );
+
+
+    $("analysisGrid").innerHTML =
+        sections
+            .map(
+                section => `
+
+                    <article
+                        class="analysis-card"
+                    >
+
+                        <div
+                            class="analysis-title"
+                        >
+
+                            <h3>
+                                ${escapeHtml(
+                                    section.title
+                                )}
+                            </h3>
+
+                            <span
+                                class="analysis-badge"
+                            >
+                                ${escapeHtml(
+                                    section.badge
+                                )}
+                            </span>
+
+                        </div>
+
+
+                        <div
+                            class="analysis-text"
+                        >
+                            ${escapeHtml(
+                                section.text
+                            )}
+                        </div>
+
+
+                        <div
+                            class="evidence"
+                        >
+
+                            <div
+                                class="evidence-title"
+                            >
+                                本段解析依据
+                            </div>
+
+                            <div
+                                class="evidence-list"
+                            >
+
+                                ${
+                                    section.evidence
+                                        .filter(Boolean)
+                                        .map(
+                                            item =>
+                                                `<span class="evidence-item">
+                                                    ${escapeHtml(item)}
+                                                </span>`
+                                        )
+                                        .join("")
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </article>
+                `
+            )
+            .join("");
+}
+
+
+/* ============================================================
+   运限
+============================================================ */
+
+function renderCycleInfo(
+    cycle
+) {
+
+    if (!currentChart) {
+        return;
+    }
+
+
+    const chart =
+        currentChart;
+
+
+    if (cycle === "natal") {
+
+        $("cycleInfo").innerHTML =
+            `
+                <b>本命盘</b><br>
+                当前显示出生时形成的十二宫结构。
+                命宫三方四正已经在盘面中以浅色标记。
+            `;
 
         return;
     }
 
-    showLoading("正在生成 PNG……");
 
-    try{
+    if (cycle === "decadal") {
 
-        /*
-          使用浏览器 SVG + foreignObject
-          生成一个简单的命盘图片。
-        */
+        const soul =
+            palaceByName(
+                chart,
+                "命宫"
+            );
 
-        const chart =
-            document.getElementById("chart");
 
-        const width = 1100;
-        const height = 850;
-
-        const clone =
-            chart.cloneNode(true);
-
-        clone.style.width =
-            "1000px";
-
-        clone.style.height =
-            "760px";
-
-        clone.style.margin =
-            "20px auto";
-
-        clone.style.minWidth =
-            "0";
-
-        const wrapper =
-            document.createElement("div");
-
-        wrapper.style.width =
-            "1100px";
-
-        wrapper.style.padding =
-            "30px";
-
-        wrapper.style.background =
-            "#ffffff";
-
-        wrapper.appendChild(clone);
-
-        const svg =
+        $("cycleInfo").innerHTML =
             `
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="${width}"
-                height="${height}"
-            >
-                <foreignObject
-                    x="0"
-                    y="0"
-                    width="100%"
-                    height="100%"
-                >
-                    ${new XMLSerializer().serializeToString(wrapper)}
-                </foreignObject>
-            </svg>
+                <b>大限</b><br>
+                命宫：
+                ${
+                    soul
+                        ? escapeHtml(
+                            formatDecadal(
+                                soul.decadal
+                            )
+                        )
+                        : "—"
+                }<br>
+                十二宫的大限区间已经写入各宫底部。
             `;
 
-        const blob =
-            new Blob(
-                [svg],
+        return;
+    }
+
+
+    if (cycle === "yearly") {
+
+        $("cycleInfo").innerHTML =
+            `
+                <b>${escapeHtml(
+                    currentForm.analysisYear
+                )}年流年</b><br>
+                流年解析以实际 horoscope 运限对象为基础。
+                具体宫位和星曜会显示在“大白话解析”中。
+            `;
+
+    }
+}
+
+
+/* ============================================================
+   保存资料
+============================================================ */
+
+function saveForm() {
+
+    const form =
+        getFormData();
+
+
+    const safe = {
+        ...form
+    };
+
+
+    try {
+
+        localStorage.setItem(
+            "ziwei_research_form",
+            JSON.stringify(
+                safe
+            )
+        );
+
+
+        alert(
+            "当前出生资料已保存到本浏览器。"
+        );
+
+    } catch (e) {
+
+        alert(
+            "浏览器不允许保存本地资料。"
+        );
+
+    }
+}
+
+
+function loadForm() {
+
+    try {
+
+        const raw =
+            localStorage.getItem(
+                "ziwei_research_form"
+            );
+
+
+        if (!raw) {
+
+            alert(
+                "当前浏览器没有找到保存的资料。"
+            );
+
+            return;
+        }
+
+
+        const form =
+            JSON.parse(raw);
+
+
+        $("birthYear").value =
+            form.year || "";
+
+        $("birthMonth").value =
+            form.month || "";
+
+        $("birthDay").value =
+            form.day || "";
+
+        $("birthHour").value =
+            Number.isFinite(form.hour)
+                ? form.hour
+                : "";
+
+        $("birthMinute").value =
+            Number.isFinite(form.minute)
+                ? form.minute
+                : 0;
+
+        $("calendarType").value =
+            form.calendar || "solar";
+
+        $("gender").value =
+            form.gender || "";
+
+        $("birthPlace").value =
+            form.place || "";
+
+        $("longitude").value =
+            Number.isFinite(
+                form.longitude
+            )
+                ? form.longitude
+                : "";
+
+        $("latitude").value =
+            Number.isFinite(
+                form.latitude
+            )
+                ? form.latitude
+                : "";
+
+        $("timezone").value =
+            form.timezone !== undefined
+                ? form.timezone
+                : 8;
+
+        $("school").value =
+            form.school || "default";
+
+        $("astroType").value =
+            form.astroType || "heaven";
+
+        $("analysisYear").value =
+            form.analysisYear || "";
+
+        $("trueSolar").checked =
+            form.trueSolar !== false;
+
+        $("leapMonth").checked =
+            form.isLeapMonth === true;
+
+
+        $("geoStatus").innerHTML =
+            "经纬度：已读取本地保存资料";
+
+    } catch (e) {
+
+        alert(
+            "读取保存资料失败。"
+        );
+
+    }
+}
+
+
+/* ============================================================
+   清空
+============================================================ */
+
+function clearAll() {
+
+    [
+        "birthYear",
+        "birthMonth",
+        "birthDay",
+        "birthPlace",
+        "longitude",
+        "latitude",
+        "analysisYear"
+    ].forEach(
+        id => {
+            $(id).value = "";
+        }
+    );
+
+
+    $("birthHour").value = "";
+    $("birthMinute").value = "0";
+    $("gender").value = "";
+    $("calendarType").value = "solar";
+    $("timezone").value = "8";
+    $("school").value = "default";
+    $("astroType").value = "heaven";
+    $("trueSolar").checked = true;
+    $("leapMonth").checked = false;
+
+
+    currentChart = null;
+    currentForm = null;
+
+
+    [
+        "verificationSection",
+        "chartSection",
+        "cycleSection",
+        "analysisSection",
+        "mutagenSection",
+        "detailSection",
+        "exportSection"
+    ].forEach(
+        id => {
+            $(id).style.display =
+                "none";
+        }
+    );
+
+
+    $("chartBoard").innerHTML = "";
+    $("analysisGrid").innerHTML = "";
+
+
+    $("geoStatus").innerHTML =
+        "经纬度：等待输入出生地";
+
+
+    clearError();
+}
+
+
+/* ============================================================
+   自动经纬度
+============================================================ */
+
+async function geocodeBirthPlace() {
+
+    const place =
+        $("birthPlace").value.trim();
+
+
+    if (!place) {
+
+        alert(
+            "请先输入出生地，例如：浙江台州。"
+        );
+
+        return;
+    }
+
+
+    $("geoBtn").disabled = true;
+    $("geoBtn").textContent =
+        "查询中……";
+
+
+    try {
+
+        // 先匹配常见城市
+        let found = null;
+
+
+        for (
+            const city in CITY_COORDS
+        ) {
+
+            if (
+                place.includes(city)
+                ||
+                city.includes(place)
+            ) {
+
+                found =
+                    CITY_COORDS[city];
+
+                break;
+            }
+
+        }
+
+
+        if (found) {
+
+            $("longitude").value =
+                found[0];
+
+            $("latitude").value =
+                found[1];
+
+
+            $("geoStatus").innerHTML =
+                `经纬度：${found[0]} / ${found[1]}（内置城市坐标）`;
+
+
+            return;
+        }
+
+
+        // 公共地理编码服务
+        const endpoint =
+            [
+                "https://",
+                "nominatim.openstreetmap.org/search"
+            ].join("");
+
+
+        const url =
+            endpoint
+            +
+            "?format=jsonv2&limit=1&q="
+            +
+            encodeURIComponent(
+                place
+            );
+
+
+        const response =
+            await fetch(
+                url,
                 {
-                    type:"image/svg+xml;charset=utf-8"
+                    headers: {
+                        "Accept":
+                            "application/json"
+                    }
                 }
             );
 
-        const url =
-            URL.createObjectURL(blob);
 
-        const image =
-            new Image();
+        if (!response.ok) {
 
-        image.onload = ()=>{
+            throw new Error(
+                "地理编码服务返回错误。"
+            );
+        }
 
-            const canvas =
-                document.createElement("canvas");
 
-            canvas.width =
-                width * 2;
+        const data =
+            await response.json();
 
-            canvas.height =
-                height * 2;
 
-            const ctx =
-                canvas.getContext("2d");
+        if (
+            !Array.isArray(data)
+            ||
+            !data.length
+        ) {
 
-            ctx.scale(2,2);
+            throw new Error(
+                "没有找到该地点。"
+            );
+        }
 
-            ctx.fillStyle =
-                "#ffffff";
 
-            ctx.fillRect(
-                0,
-                0,
-                width,
-                height
+        const item =
+            data[0];
+
+
+        const lat =
+            parseFloat(
+                item.lat
             );
 
-            ctx.drawImage(
-                image,
-                0,
-                0,
-                width,
-                height
+
+        const lon =
+            parseFloat(
+                item.lon
             );
 
-            URL.revokeObjectURL(url);
 
-            canvas.toBlob(
-                pngBlob=>{
+        if (
+            !Number.isFinite(lat)
+            ||
+            !Number.isFinite(lon)
+        ) {
 
-                    const downloadUrl =
-                        URL.createObjectURL(
-                            pngBlob
-                        );
-
-                    const a =
-                        document.createElement("a");
-
-                    a.href =
-                        downloadUrl;
-
-                    a.download =
-                        "紫微斗数命盘.png";
-
-                    a.click();
-
-                    setTimeout(
-                        ()=>{
-                            URL.revokeObjectURL(
-                                downloadUrl
-                            );
-                        },
-                        1000
-                    );
-
-                    hideLoading();
-
-                },
-                "image/png"
+            throw new Error(
+                "返回的坐标无效。"
             );
-        };
+        }
 
-        image.onerror = ()=>{
 
-            URL.revokeObjectURL(url);
+        $("longitude").value =
+            lon.toFixed(6);
 
-            hideLoading();
+        $("latitude").value =
+            lat.toFixed(6);
 
-            alert(
-                "PNG 导出失败，请使用“打印 / PDF”。"
-            );
-        };
 
-        image.src = url;
+        $("geoStatus").innerHTML =
+            `经纬度：${lon.toFixed(6)} / ${lat.toFixed(6)}（在线地理编码）`;
 
-    }catch(error){
+    } catch (e) {
 
-        console.error(error);
+        $("geoStatus").innerHTML =
+            "经纬度：自动查询失败，请手动填写";
 
-        hideLoading();
 
         alert(
-            "PNG 导出失败，请使用“打印 / PDF”。"
+            "自动获取经纬度失败。\n\n"
+            +
+            "你可以直接手动填写经度和纬度，不影响排盘。"
         );
+
+    } finally {
+
+        $("geoBtn").disabled = false;
+
+        $("geoBtn").textContent =
+            "自动获取经纬度";
+
     }
 }
 
 
-/* =========================================================
-   清空
-========================================================= */
+/* ============================================================
+   排盘主流程
+============================================================ */
 
-function resetForm(){
+function generateChart() {
 
-    document.getElementById(
-        "birthDate"
-    ).value = "";
+    clearError();
 
-    document.getElementById(
-        "lunarDate"
-    ).value = "";
 
-    document.getElementById(
-        "birthTime"
-    ).value = "";
+    const form =
+        getFormData();
 
-    document.getElementById(
-        "gender"
-    ).value = "";
 
-    document.getElementById(
-        "birthPlace"
-    ).value = "";
+    const error =
+        validateForm(
+            form
+        );
 
-    document.getElementById(
-        "longitude"
-    ).value = "";
 
-    document.getElementById(
-        "latitude"
-    ).value = "";
+    if (error) {
 
-    document.getElementById(
-        "timezone"
-    ).value = "8";
+        showError(
+            error
+        );
 
-    document.getElementById(
-        "trueSolar"
-    ).checked = false;
+        return;
+    }
 
-    document.getElementById(
-        "school"
-    ).value = "default";
 
-    document.getElementById(
-        "zhongzhouType"
-    ).value = "heaven";
+    try {
 
-    setCalendar("solar");
+        const result =
+            createChart(
+                form
+            );
 
-    setError("");
 
-    setGeoStatus(
-        "输入出生地后，点击“自动获取经纬度”。系统会根据出生地搜索经度、纬度。"
-    );
+        currentChart =
+            result.chart;
+
+
+        currentForm =
+            form;
+
+
+        currentAnalysisYear =
+            form.analysisYear;
+
+
+        renderVerification(
+            currentChart,
+            form,
+            result.adjusted
+        );
+
+
+        renderChart(
+            currentChart,
+            form,
+            result.adjusted
+        );
+
+
+        renderAnalysis(
+            currentChart,
+            form
+        );
+
+
+        renderMutagenTable(
+            currentChart
+        );
+
+
+        renderDetailTable(
+            currentChart
+        );
+
+
+        renderCycleInfo(
+            "natal"
+        );
+
+
+        [
+            "verificationSection",
+            "chartSection",
+            "cycleSection",
+            "analysisSection",
+            "mutagenSection",
+            "detailSection",
+            "exportSection"
+        ].forEach(
+            id => {
+                $(id).style.display =
+                    "block";
+            }
+        );
+
+
+        document
+            .querySelectorAll(
+                ".cycle-btn"
+            )
+            .forEach(
+                btn => {
+
+                    btn.classList.toggle(
+                        "active",
+                        btn.dataset.cycle === "natal"
+                    );
+
+                }
+            );
+
+
+        setStatus(
+            "排盘核心已加载，当前命盘生成成功",
+            true
+        );
+
+
+        setTimeout(
+            () => {
+
+                $("chartSection")
+                    .scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+
+            },
+            100
+        );
+
+    } catch (e) {
+
+        console.error(e);
+
+        showError(
+            "排盘失败：" +
+            (e && e.message
+                ? e.message
+                : "未知错误")
+        );
+
+    }
 }
 
 
-/* =========================================================
+/* ============================================================
    主题
-========================================================= */
+============================================================ */
 
-function toggleTheme(){
+function setTheme(mode) {
 
-    document.body.classList.toggle(
-        "dark"
-    );
+    if (mode === "dark") {
 
-    localStorage.setItem(
-        "ziwei_theme",
-        document.body.classList.contains("dark")
-        ? "dark"
-        : "light"
-    );
-}
-
-
-function loadTheme(){
-
-    const theme =
-        localStorage.getItem(
-            "ziwei_theme"
+        document.documentElement.style.setProperty(
+            "--bg",
+            "#201d19"
         );
 
-    if(theme === "dark"){
-
-        document.body.classList.add(
-            "dark"
+        document.documentElement.style.setProperty(
+            "--card",
+            "#29251f"
         );
+
+        document.documentElement.style.setProperty(
+            "--card2",
+            "#322c24"
+        );
+
+        document.documentElement.style.setProperty(
+            "--line",
+            "#564c3e"
+        );
+
+        document.documentElement.style.setProperty(
+            "--line-dark",
+            "#766957"
+        );
+
+        document.documentElement.style.setProperty(
+            "--text",
+            "#eee7dc"
+        );
+
+        document.documentElement.style.setProperty(
+            "--muted",
+            "#aaa091"
+        );
+
+        document.documentElement.style.setProperty(
+            "--red",
+            "#bd5a4f"
+        );
+
+    } else {
+
+        document.documentElement.style.setProperty(
+            "--bg",
+            "#f4f1eb"
+        );
+
+        document.documentElement.style.setProperty(
+            "--card",
+            "#fffdf8"
+        );
+
+        document.documentElement.style.setProperty(
+            "--card2",
+            "#f8f4ec"
+        );
+
+        document.documentElement.style.setProperty(
+            "--line",
+            "#d8cdbb"
+        );
+
+        document.documentElement.style.setProperty(
+            "--line-dark",
+            "#b9aa94"
+        );
+
+        document.documentElement.style.setProperty(
+            "--text",
+            "#292621"
+        );
+
+        document.documentElement.style.setProperty(
+            "--muted",
+            "#7b746a"
+        );
+
+        document.documentElement.style.setProperty(
+            "--red",
+            "#9d332c"
+        );
+
     }
 }
 
 
-/* =========================================================
+/* ============================================================
+   CDN 加载
+============================================================ */
+
+function loadScript(
+    urls,
+    index = 0
+) {
+
+    return new Promise(
+        (resolve, reject) => {
+
+            if (
+                index >= urls.length
+            ) {
+
+                reject(
+                    new Error(
+                        "所有排盘核心 CDN 均加载失败。"
+                    )
+                );
+
+                return;
+            }
+
+
+            const script =
+                document.createElement(
+                    "script"
+                );
+
+
+            script.src =
+                urls[index];
+
+
+            script.async = true;
+
+
+            script.onload =
+                () => {
+
+                    if (
+                        window.iztro
+                        &&
+                        window.iztro.astro
+                    ) {
+
+                        resolve();
+
+                    } else {
+
+                        loadScript(
+                            urls,
+                            index + 1
+                        )
+                        .then(resolve)
+                        .catch(reject);
+
+                    }
+
+                };
+
+
+            script.onerror =
+                () => {
+
+                    loadScript(
+                        urls,
+                        index + 1
+                    )
+                    .then(resolve)
+                    .catch(reject);
+
+                };
+
+
+            document.head.appendChild(
+                script
+            );
+
+        }
+    );
+}
+
+
+/* ============================================================
    初始化
-========================================================= */
+============================================================ */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    ()=>{
+async function init() {
 
-        loadTheme();
+    setStatus(
+        "正在加载排盘核心……",
+        false
+    );
 
-        renderSavedList();
 
-        setCalendar("solar");
+    const urls = [
 
-        /*
-          故意不填写任何个人出生资料。
-        */
+        [
+            "https://",
+            "cdn.jsdelivr.net/npm/iztro@2.6.0/dist/iztro-v2.6.0.min.js"
+        ].join(""),
 
-        document.getElementById(
-            "timezone"
-        ).value = "8";
+        [
+            "https://",
+            "unpkg.com/iztro@2.6.0/dist/iztro-v2.6.0.min.js"
+        ].join("")
+
+    ];
+
+
+    try {
+
+        await loadScript(
+            urls
+        );
+
+
+        setStatus(
+            "排盘核心加载成功，可以开始排盘",
+            true
+        );
+
+    } catch (e) {
+
+        setStatus(
+            "排盘核心加载失败，请刷新页面重试",
+            false
+        );
+
+        console.error(e);
 
     }
+}
+
+
+/* ============================================================
+   事件
+============================================================ */
+
+$("geoBtn")
+    .addEventListener(
+        "click",
+        geocodeBirthPlace
+    );
+
+
+$("chartBtn")
+    .addEventListener(
+        "click",
+        generateChart
+    );
+
+
+$("saveBtn")
+    .addEventListener(
+        "click",
+        saveForm
+    );
+
+
+$("loadBtn")
+    .addEventListener(
+        "click",
+        loadForm
+    );
+
+
+$("clearBtn")
+    .addEventListener(
+        "click",
+        clearAll
+    );
+
+
+$("printBtn")
+    .addEventListener(
+        "click",
+        () => {
+            window.print();
+        }
+    );
+
+
+$("themeMode")
+    .addEventListener(
+        "change",
+        e => {
+            setTheme(
+                e.target.value
+            );
+        }
+    );
+
+
+document
+    .querySelectorAll(
+        ".cycle-btn"
+    )
+    .forEach(
+        btn => {
+
+            btn.addEventListener(
+                "click",
+                () => {
+
+                    document
+                        .querySelectorAll(
+                            ".cycle-btn"
+                        )
+                        .forEach(
+                            x =>
+                                x.classList.remove(
+                                    "active"
+                                )
+                        );
+
+
+                    btn.classList.add(
+                        "active"
+                    );
+
+
+                    currentCycle =
+                        btn.dataset.cycle;
+
+
+                    renderCycleInfo(
+                        currentCycle
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+$("calendarType")
+    .addEventListener(
+        "change",
+        e => {
+
+            const isLunar =
+                e.target.value === "lunar";
+
+
+            $("leapMonth")
+                .disabled =
+                !isLunar;
+
+        }
+    );
+
+
+$("school")
+    .addEventListener(
+        "change",
+        e => {
+
+            const isZhongzhou =
+                e.target.value === "zhongzhou";
+
+
+            $("astroType")
+                .disabled =
+                !isZhongzhou;
+
+        }
+    );
+
+
+$("astroType").disabled = true;
+$("leapMonth").disabled = true;
+
+
+/* ============================================================
+   启动
+============================================================ */
+
+setTheme(
+    "light"
 );
+
+
+init();
+
+})();
 </script>
 
 </body>
